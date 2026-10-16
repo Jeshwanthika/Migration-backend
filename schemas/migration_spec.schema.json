@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "migration_spec",
+  "type": "object",
+  "required": ["schema_version", "source_file", "notes", "entities", "rules", "screens", "workflows", "reports", "stubs", "flags", "usage"],
+  "$defs": {
+    "refs": {"type": "array", "items": {"type": "string"}},
+    "support": {"enum": ["supported", "partial", "unsupported"]},
+    "typed": {"type": "array", "items": {"type": "object", "required": ["name", "type"],
+              "properties": {"name": {"type": "string"}, "type": {"type": "string"}}}}
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "source_file": {"type": "string"},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "entities": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "description", "fields", "inferred", "source_ref", "support"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ENT-\\d{3,}$"}, "name": {"type": "string", "minLength": 1},
+        "description": {"type": "string"}, "inferred": {"type": "boolean"},
+        "fields": {"type": "array", "items": {"type": "object", "required": ["name", "type", "required", "notes"],
+          "properties": {"name": {"type": "string"}, "type": {"enum": ["string", "int", "decimal", "date", "datetime", "bool"]},
+                         "required": {"type": "boolean"}, "notes": {"type": "string"}}}},
+        "source_ref": {"$ref": "#/$defs/refs"}, "support": {"$ref": "#/$defs/support"}}}},
+    "rules": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "kind", "description", "inputs", "outputs", "entities", "source_ref", "support"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^RUL-\\d{3,}$"}, "name": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["validation", "calculation", "lookup", "automation", "other"]}, "description": {"type": "string"},
+        "inputs": {"$ref": "#/$defs/typed"}, "outputs": {"$ref": "#/$defs/typed"},
+        "entities": {"type": "array", "items": {"type": "string"}},
+        "source_ref": {"$ref": "#/$defs/refs"}, "support": {"$ref": "#/$defs/support"}}}},
+    "screens": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "purpose", "controls", "actions", "entities", "inferred", "source_ref", "support"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SCR-\\d{3,}$"}, "name": {"type": "string", "minLength": 1},
+        "purpose": {"type": "string"}, "inferred": {"type": "boolean"}, "entities": {"type": "array", "items": {"type": "string"}},
+        "controls": {"type": "array", "items": {"type": "object", "required": ["name", "type", "label", "binds_to"],
+          "properties": {"name": {"type": "string"}, "type": {"enum": ["text", "number", "date", "dropdown", "checkbox", "button", "table", "label", "other"]},
+                         "label": {"type": "string"}, "binds_to": {"type": "string"}}}},
+        "actions": {"type": "array", "items": {"type": "object", "required": ["name", "description", "calls"],
+          "properties": {"name": {"type": "string"}, "description": {"type": "string"}, "calls": {"type": "string"}}}},
+        "source_ref": {"$ref": "#/$defs/refs"}, "support": {"$ref": "#/$defs/support"}}}},
+    "workflows": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "description", "trigger", "steps", "source_ref", "support"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^WFL-\\d{3,}$"}, "name": {"type": "string", "minLength": 1},
+        "description": {"type": "string"}, "trigger": {"type": "string"},
+        "steps": {"type": "array", "items": {"type": "object", "required": ["order", "description", "rule"],
+          "properties": {"order": {"type": "integer", "minimum": 1}, "description": {"type": "string"}, "rule": {"type": "string"}}}},
+        "source_ref": {"$ref": "#/$defs/refs"}, "support": {"$ref": "#/$defs/support"}}}},
+    "reports": {"type": "array", "items": {
+      "type": "object", "required": ["id", "name", "format", "description", "data_from", "source_ref", "support"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^RPT-\\d{3,}$"}, "name": {"type": "string", "minLength": 1},
+        "format": {"enum": ["pdf", "csv", "xlsx", "html", "other"]}, "description": {"type": "string"},
+        "data_from": {"type": "array", "items": {"type": "string"}},
+        "source_ref": {"$ref": "#/$defs/refs"}, "support": {"$ref": "#/$defs/support"}}}},
+    "stubs": {"type": "array", "items": {
+      "type": "object", "required": ["procedure_id", "module", "name", "start_line", "end_line", "level", "reason"],
+      "properties": {
+        "procedure_id": {"type": "string"}, "module": {"type": "string"}, "name": {"type": "string"},
+        "start_line": {"type": "integer"}, "end_line": {"type": "integer"},
+        "level": {"enum": ["partial", "unsupported"]}, "reason": {"type": "string"}}}},
+    "flags": {"type": "array", "items": {
+      "type": "object", "required": ["code", "severity", "reason"],
+      "properties": {"code": {"type": "string"}, "severity": {"enum": ["Info", "Warning", "Blocker"]}, "reason": {"type": "string"}}}},
+    "usage": {"type": "object", "required": ["tokens", "calls", "chunks"],
+      "properties": {"tokens": {"type": "integer", "minimum": 0}, "calls": {"type": "integer", "minimum": 0}, "chunks": {"type": "integer", "minimum": 0}}}
+  }
+}

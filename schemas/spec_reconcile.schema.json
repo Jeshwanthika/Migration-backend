@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "spec_reconcile (entity names that mean the same thing)",
+  "type": "object",
+  "required": ["merge"],
+  "properties": {
+    "merge": {"type": "array", "items": {
+      "type": "object", "required": ["canonical", "aliases"],
+      "properties": {"canonical": {"type": "string"}, "aliases": {"type": "array", "items": {"type": "string"}}}}}
+  }
+}

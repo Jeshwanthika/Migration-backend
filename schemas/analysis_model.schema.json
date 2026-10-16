@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "analysis_model",
+  "type": "object",
+  "required": ["schema_version", "source_file", "modules", "procedures", "flags", "usage"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "source_file": {"type": "string"},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "summary", "line_count", "procedure_count"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "summary": {"type": "string"},
+          "line_count": {"type": "integer", "minimum": 0},
+          "procedure_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "procedures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "module", "name", "kind", "scope", "params", "returns", "start_line", "end_line",
+                     "role", "summary", "calls", "reads", "writes", "support", "support_reason", "analyzed"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "module": {"type": "string"},
+          "name": {"type": "string"},
+          "kind": {"enum": ["Sub", "Function", "Property Get", "Property Let", "Property Set"]},
+          "scope": {"type": "string"},
+          "params": {"type": "array", "items": {"type": "object", "required": ["name", "type", "optional", "by_val"]}},
+          "returns": {"type": ["string", "null"]},
+          "start_line": {"type": "integer", "minimum": 1},
+          "end_line": {"type": "integer", "minimum": 1},
+          "role": {"enum": ["ui_handler", "event", "calculation", "data_access", "report", "utility"]},
+          "summary": {"type": "string"},
+          "calls": {"type": "array", "items": {"type": "string"}},
+          "reads": {"type": "array", "items": {"type": "string"}},
+          "writes": {"type": "array", "items": {"type": "string"}},
+          "support": {"enum": ["supported", "partial", "unsupported"]},
+          "support_reason": {"type": "string"},
+          "analyzed": {"type": "boolean"}
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "reason"],
+        "properties": {
+          "code": {"type": "string"},
+          "severity": {"enum": ["Info", "Warning", "Blocker"]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "required": ["tokens", "calls", "chunks"],
+      "properties": {
+        "tokens": {"type": "integer", "minimum": 0},
+        "calls": {"type": "integer", "minimum": 0},
+        "chunks": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "app_name": "InventoryOrdersSample",
+  "dotnet_version": "10.0.102",
+  "result": "passed",
+  "restore": {
+    "status": "ok",
+    "exit_code": 0,
+    "seconds": 2.2,
+    "output_tail": "  Determining projects to restore...\r\n  Restored C:\\Users\\Jash\\Downloads\\legacy_migration_platform\\backend\\workspace\\42262aff150847e19f707c35d0a8327d\\output\\app\\InventoryOrdersSample\\InventoryOrdersSample.csproj (in 1.19 sec).\r\n\n"
+  },
+  "build": {
+    "status": "ok",
+    "exit_code": 0,
+    "seconds": 4.8,
+    "output_tail": "\r\nBuild succeeded.\r\n    0 Warning(s)\r\n    0 Error(s)\r\n\r\nTime Elapsed 00:00:04.55\r\n\n"
+  },
+  "errors": [],
+  "warning_count": 0
+}

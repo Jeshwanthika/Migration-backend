@@ -1,0 +1,672 @@
+{
+  "schema_version": "1.0",
+  "source_file": "inventory_orders_sample.xlsm",
+  "modules": [
+    {
+      "name": "modInventory",
+      "type": "standard",
+      "summary": "Mock analysis (no model was used).",
+      "line_count": 164,
+      "procedure_count": 11
+    },
+    {
+      "name": "modUtils",
+      "type": "standard",
+      "summary": "Mock analysis (no model was used).",
+      "line_count": 16,
+      "procedure_count": 3
+    },
+    {
+      "name": "clsProduct",
+      "type": "standard",
+      "summary": "Mock analysis (no model was used).",
+      "line_count": 31,
+      "procedure_count": 6
+    },
+    {
+      "name": "ThisWorkbook",
+      "type": "sheet",
+      "summary": "Mock analysis (no model was used).",
+      "line_count": 28,
+      "procedure_count": 2
+    }
+  ],
+  "procedures": [
+    {
+      "id": "modInventory.AddProduct",
+      "module": "modInventory",
+      "name": "AddProduct",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "sku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "productName",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "category",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "unitPrice",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "stock",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "reorderLevel",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 8,
+      "end_line": 23,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.FindProductRow",
+      "module": "modInventory",
+      "name": "FindProductRow",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "sku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Long",
+      "start_line": 26,
+      "end_line": 34,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.LookupPrice",
+      "module": "modInventory",
+      "name": "LookupPrice",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "sku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 36,
+      "end_line": 44,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.GetDiscount",
+      "module": "modInventory",
+      "name": "GetDiscount",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "qty",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 47,
+      "end_line": 58,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.CalcOrderTotal",
+      "module": "modInventory",
+      "name": "CalcOrderTotal",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "unitPrice",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "qty",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 60,
+      "end_line": 64,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.PlaceOrder",
+      "module": "modInventory",
+      "name": "PlaceOrder",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "sku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "qty",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Boolean",
+      "start_line": 67,
+      "end_line": 100,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.CheckReorder",
+      "module": "modInventory",
+      "name": "CheckReorder",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "sku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 102,
+      "end_line": 111,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.RefreshStockStatus",
+      "module": "modInventory",
+      "name": "RefreshStockStatus",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 114,
+      "end_line": 127,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.ExportLowStockCSV",
+      "module": "modInventory",
+      "name": "ExportLowStockCSV",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 130,
+      "end_line": 149,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "partial",
+      "support_reason": "File write (found by the rule check).",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.ExportOrdersPDF",
+      "module": "modInventory",
+      "name": "ExportOrdersPDF",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 151,
+      "end_line": 153,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "unsupported",
+      "support_reason": "Excel PDF export through COM (found by the rule check).",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.EmailLowStockReport",
+      "module": "modInventory",
+      "name": "EmailLowStockReport",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 155,
+      "end_line": 164,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "unsupported",
+      "support_reason": "COM automation of another application (found by the rule check).",
+      "analyzed": true
+    },
+    {
+      "id": "modUtils.FormatSku",
+      "module": "modUtils",
+      "name": "FormatSku",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "text",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "String",
+      "start_line": 6,
+      "end_line": 8,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modUtils.IsValidQty",
+      "module": "modUtils",
+      "name": "IsValidQty",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "qty",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Boolean",
+      "start_line": 10,
+      "end_line": 12,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "modUtils.PauseBriefly",
+      "module": "modUtils",
+      "name": "PauseBriefly",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 14,
+      "end_line": 16,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.Sku",
+      "module": "clsProduct",
+      "name": "Sku",
+      "kind": "Property Get",
+      "scope": "Public",
+      "params": [],
+      "returns": "String",
+      "start_line": 9,
+      "end_line": 11,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.Sku.Let",
+      "module": "clsProduct",
+      "name": "Sku",
+      "kind": "Property Let",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "value",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 13,
+      "end_line": 15,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.Stock",
+      "module": "clsProduct",
+      "name": "Stock",
+      "kind": "Property Get",
+      "scope": "Public",
+      "params": [],
+      "returns": "Long",
+      "start_line": 17,
+      "end_line": 19,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.Stock.Let",
+      "module": "clsProduct",
+      "name": "Stock",
+      "kind": "Property Let",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "value",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 21,
+      "end_line": 23,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.ReorderLevel",
+      "module": "clsProduct",
+      "name": "ReorderLevel",
+      "kind": "Property Let",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "value",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 25,
+      "end_line": 27,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "clsProduct.IsLowStock",
+      "module": "clsProduct",
+      "name": "IsLowStock",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [],
+      "returns": "Boolean",
+      "start_line": 29,
+      "end_line": 31,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "ThisWorkbook.Workbook_Open",
+      "module": "ThisWorkbook",
+      "name": "Workbook_Open",
+      "kind": "Sub",
+      "scope": "Private",
+      "params": [],
+      "returns": null,
+      "start_line": 11,
+      "end_line": 15,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Mock provider: nothing was analyzed.",
+      "analyzed": true
+    },
+    {
+      "id": "ThisWorkbook.Workbook_SheetChange",
+      "module": "ThisWorkbook",
+      "name": "Workbook_SheetChange",
+      "kind": "Sub",
+      "scope": "Private",
+      "params": [
+        {
+          "name": "Sh",
+          "type": "Object",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "Target",
+          "type": "Range",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 17,
+      "end_line": 28,
+      "role": "utility",
+      "summary": "Mock summary.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "partial",
+      "support_reason": "Worksheet_Change event cascade (found by the rule check).",
+      "analyzed": true
+    }
+  ],
+  "flags": [
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modInventory:138",
+      "snippet": "filePath = ThisWorkbook.Path & Application.PathSeparator & \"low_stock.csv\"",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in ExportLowStockCSV.",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    },
+    {
+      "code": "PARTIAL_FILE_WRITE",
+      "severity": "Warning",
+      "support": "partial",
+      "source_ref": "modInventory:140",
+      "snippet": "Open filePath For Output As #fileNum",
+      "reason": "File write in ExportLowStockCSV (3 places: lines 140, 141, 144).",
+      "suggested_action": "Write under a configured folder on the server."
+    },
+    {
+      "code": "UNSUPPORTED_EXPORT_PDF",
+      "severity": "Warning",
+      "support": "unsupported",
+      "source_ref": "modInventory:152",
+      "snippet": "ThisWorkbook.Worksheets(\"Orders\").ExportAsFixedFormat Type:=xlTypePDF, Filename:=ThisWorkbook.Path & \"\\orders.pdf\"",
+      "reason": "Excel PDF export through COM in ExportOrdersPDF.",
+      "suggested_action": "Generate the PDF with a .NET PDF library."
+    },
+    {
+      "code": "UNSUPPORTED_COM_AUTOMATION",
+      "severity": "Warning",
+      "support": "unsupported",
+      "source_ref": "modInventory:158",
+      "snippet": "Set outlookApp = CreateObject(\"Outlook.Application\")",
+      "reason": "COM automation of another application in EmailLowStockReport.",
+      "suggested_action": "Reimplement with a .NET library or stub the call."
+    },
+    {
+      "code": "UNSUPPORTED_WIN32_DECLARE",
+      "severity": "Warning",
+      "support": "unsupported",
+      "source_ref": "modUtils:4",
+      "snippet": "Private Declare PtrSafe Sub Sleep Lib \"kernel32\" (ByVal dwMilliseconds As Long)",
+      "reason": "Win32 Declare call in the declarations of modUtils.",
+      "suggested_action": "Replace with a managed .NET API or remove the call."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "ThisWorkbook:12",
+      "snippet": "Application.ScreenUpdating = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in Workbook_Open (2 places: lines 12, 14).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    },
+    {
+      "code": "PARTIAL_WORKSHEET_CHANGE_EVENT",
+      "severity": "Warning",
+      "support": "partial",
+      "source_ref": "ThisWorkbook:17",
+      "snippet": "Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)",
+      "reason": "Worksheet_Change event cascade in Workbook_SheetChange.",
+      "suggested_action": "Review the rule as an explicit service call."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "ThisWorkbook:21",
+      "snippet": "Application.EnableEvents = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in Workbook_SheetChange (2 places: lines 21, 27).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    }
+  ],
+  "usage": {
+    "tokens": 2644,
+    "calls": 4,
+    "chunks": 4
+  }
+}

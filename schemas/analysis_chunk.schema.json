@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "analysis_chunk (what the LLM returns for one chunk)",
+  "type": "object",
+  "required": ["module_summary", "procedures"],
+  "properties": {
+    "module_summary": {"type": "string"},
+    "procedures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "summary", "support", "support_reason"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"type": "string"},
+          "role": {"enum": ["ui_handler", "event", "calculation", "data_access", "report", "utility"]},
+          "summary": {"type": "string"},
+          "calls": {"type": "array", "items": {"type": "string"}},
+          "reads": {"type": "array", "items": {"type": "string"}},
+          "writes": {"type": "array", "items": {"type": "string"}},
+          "support": {"enum": ["supported", "partial", "unsupported"]},
+          "support_reason": {"type": "string"},
+          "constructs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["level", "construct", "snippet", "reason"],
+              "properties": {
+                "level": {"enum": ["partial", "unsupported", "ignorable"]},
+                "construct": {"type": "string"},
+                "snippet": {"type": "string"},
+                "reason": {"type": "string"},
+                "suggested_action": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

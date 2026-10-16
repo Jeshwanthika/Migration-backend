@@ -1,0 +1,349 @@
+{
+  "schema_version": "1.0",
+  "source_file": "inventory_orders_sample.xlsm",
+  "notes": [
+    "Only the VBA code was analyzed. Workbook data, cell contents and UserForm layouts were not available.",
+    "Entities, fields and screen controls are inferred from how the code uses sheets, ranges, forms and message boxes.",
+    "Every element lists the procedures it came from in source_ref."
+  ],
+  "entities": [
+    {
+      "id": "ENT-001",
+      "name": "Item",
+      "description": "Placeholder record from the mock provider.",
+      "fields": [
+        {
+          "name": "Name",
+          "type": "string",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "Amount",
+          "type": "decimal",
+          "required": false,
+          "notes": ""
+        }
+      ],
+      "inferred": true,
+      "source_ref": [
+        "modInventory.AddProduct",
+        "modUtils.FormatSku",
+        "clsProduct.Sku",
+        "ThisWorkbook.Workbook_Open"
+      ],
+      "support": "supported"
+    }
+  ],
+  "rules": [
+    {
+      "id": "RUL-001",
+      "name": "AddProduct",
+      "kind": "calculation",
+      "description": "Mock rule for AddProduct.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.AddProduct"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-002",
+      "name": "FindProductRow",
+      "kind": "calculation",
+      "description": "Mock rule for FindProductRow.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.FindProductRow"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-003",
+      "name": "LookupPrice",
+      "kind": "calculation",
+      "description": "Mock rule for LookupPrice.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.LookupPrice"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-004",
+      "name": "GetDiscount",
+      "kind": "calculation",
+      "description": "Mock rule for GetDiscount.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.GetDiscount"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-005",
+      "name": "CalcOrderTotal",
+      "kind": "calculation",
+      "description": "Mock rule for CalcOrderTotal.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.CalcOrderTotal"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-006",
+      "name": "PlaceOrder",
+      "kind": "calculation",
+      "description": "Mock rule for PlaceOrder.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.PlaceOrder"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-007",
+      "name": "CheckReorder",
+      "kind": "calculation",
+      "description": "Mock rule for CheckReorder.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.CheckReorder"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-008",
+      "name": "RefreshStockStatus",
+      "kind": "calculation",
+      "description": "Mock rule for RefreshStockStatus.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.RefreshStockStatus"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-009",
+      "name": "ExportLowStockCSV",
+      "kind": "calculation",
+      "description": "Mock rule for ExportLowStockCSV.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.ExportLowStockCSV"
+      ],
+      "support": "partial"
+    },
+    {
+      "id": "RUL-010",
+      "name": "ExportOrdersPDF",
+      "kind": "calculation",
+      "description": "Mock rule for ExportOrdersPDF.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.ExportOrdersPDF"
+      ],
+      "support": "unsupported"
+    },
+    {
+      "id": "RUL-011",
+      "name": "EmailLowStockReport",
+      "kind": "calculation",
+      "description": "Mock rule for EmailLowStockReport.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modInventory.EmailLowStockReport"
+      ],
+      "support": "unsupported"
+    },
+    {
+      "id": "RUL-012",
+      "name": "FormatSku",
+      "kind": "calculation",
+      "description": "Mock rule for FormatSku.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modUtils.FormatSku"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-013",
+      "name": "IsValidQty",
+      "kind": "calculation",
+      "description": "Mock rule for IsValidQty.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modUtils.IsValidQty"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-014",
+      "name": "PauseBriefly",
+      "kind": "calculation",
+      "description": "Mock rule for PauseBriefly.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "modUtils.PauseBriefly"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-015",
+      "name": "Sku",
+      "kind": "calculation",
+      "description": "Mock rule for Sku.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "clsProduct.Sku",
+        "clsProduct.Sku.Let"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-016",
+      "name": "Stock",
+      "kind": "calculation",
+      "description": "Mock rule for Stock.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "clsProduct.Stock",
+        "clsProduct.Stock.Let"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-017",
+      "name": "ReorderLevel",
+      "kind": "calculation",
+      "description": "Mock rule for ReorderLevel.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "clsProduct.ReorderLevel"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-018",
+      "name": "IsLowStock",
+      "kind": "calculation",
+      "description": "Mock rule for IsLowStock.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "clsProduct.IsLowStock"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-019",
+      "name": "WorkbookOpen",
+      "kind": "calculation",
+      "description": "Mock rule for Workbook_Open.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "ThisWorkbook.Workbook_Open"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-020",
+      "name": "WorkbookSheetChange",
+      "kind": "calculation",
+      "description": "Mock rule for Workbook_SheetChange.",
+      "inputs": [],
+      "outputs": [],
+      "entities": [],
+      "source_ref": [
+        "ThisWorkbook.Workbook_SheetChange"
+      ],
+      "support": "partial"
+    }
+  ],
+  "screens": [],
+  "workflows": [],
+  "reports": [],
+  "stubs": [
+    {
+      "procedure_id": "modInventory.ExportLowStockCSV",
+      "module": "modInventory",
+      "name": "ExportLowStockCSV",
+      "start_line": 130,
+      "end_line": 149,
+      "level": "partial",
+      "reason": "File write (found by the rule check)."
+    },
+    {
+      "procedure_id": "modInventory.ExportOrdersPDF",
+      "module": "modInventory",
+      "name": "ExportOrdersPDF",
+      "start_line": 151,
+      "end_line": 153,
+      "level": "unsupported",
+      "reason": "Excel PDF export through COM (found by the rule check)."
+    },
+    {
+      "procedure_id": "modInventory.EmailLowStockReport",
+      "module": "modInventory",
+      "name": "EmailLowStockReport",
+      "start_line": 155,
+      "end_line": 164,
+      "level": "unsupported",
+      "reason": "COM automation of another application (found by the rule check)."
+    },
+    {
+      "procedure_id": "ThisWorkbook.Workbook_SheetChange",
+      "module": "ThisWorkbook",
+      "name": "Workbook_SheetChange",
+      "start_line": 17,
+      "end_line": 28,
+      "level": "partial",
+      "reason": "Worksheet_Change event cascade (found by the rule check)."
+    }
+  ],
+  "flags": [],
+  "usage": {
+    "tokens": 3607,
+    "calls": 4,
+    "chunks": 4
+  }
+}

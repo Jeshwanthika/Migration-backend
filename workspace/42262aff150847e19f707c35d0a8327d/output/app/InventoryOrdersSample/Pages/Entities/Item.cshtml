@@ -1,0 +1,47 @@
+@page
+@model ItemModel
+@{
+    ViewData["Title"] = "Item";
+}
+
+<h1>Item</h1>
+<p class="muted">Placeholder record from the mock provider.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model.Items)
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.Name</td>
+                <td>@row.Amount</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@row.Id">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (!Model.Items.Any())
+{
+    <p class="muted">No records yet.</p>
+}
+
+<h2>Add a record</h2>
+<form method="post" asp-page-handler="Add">
+    <label asp-for="Item.Name">Name</label>
+    <input asp-for="Item.Name" />
+    <label asp-for="Item.Amount">Amount</label>
+    <input asp-for="Item.Amount" />
+    <button type="submit">Add</button>
+</form>

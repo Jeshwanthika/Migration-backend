@@ -1,0 +1,23 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Inventory Orders Sample</h1>
+<p class="muted">Migrated from <code>inventory_orders_sample.xlsm</code>. Only the VBA logic was migrated. No workbook data was carried over.</p>
+
+<ul>
+    <li>Records: <a asp-page="/Entities/Item">Item</a></li>
+</ul>
+
+<h2>Still to do</h2>
+<table>
+    <thead><tr><th>Procedure</th><th>Level</th><th>Why</th></tr></thead>
+    <tbody>
+        <tr><td>modInventory.ExportLowStockCSV</td><td>partial</td><td>File write (found by the rule check).</td></tr>
+        <tr><td>modInventory.ExportOrdersPDF</td><td>unsupported</td><td>Excel PDF export through COM (found by the rule check).</td></tr>
+        <tr><td>modInventory.EmailLowStockReport</td><td>unsupported</td><td>COM automation of another application (found by the rule check).</td></tr>
+        <tr><td>ThisWorkbook.Workbook_SheetChange</td><td>partial</td><td>Worksheet_Change event cascade (found by the rule check).</td></tr>
+    </tbody>
+</table>

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "generated_methods (what the LLM returns for one batch of method bodies)",
+  "type": "object",
+  "required": ["methods"],
+  "properties": {
+    "methods": {"type": "array", "items": {
+      "type": "object", "required": ["id", "body"],
+      "properties": {"id": {"type": "string"}, "body": {"type": "string"}}}}
+  }
+}

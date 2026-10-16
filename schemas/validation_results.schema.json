@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "validation_results",
+  "type": "object",
+  "required": ["schema_version", "app_name", "dotnet_version", "restore", "build", "errors", "warning_count", "result"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "app_name": {"type": "string"},
+    "dotnet_version": {"type": "string"},
+    "result": {"enum": ["passed", "build_failed", "restore_failed", "timed_out"]},
+    "restore": {"$ref": "#/$defs/step"},
+    "build": {"$ref": "#/$defs/step"},
+    "errors": {"type": "array", "items": {
+      "type": "object", "required": ["code", "message"],
+      "properties": {"file": {"type": "string"}, "line": {"type": "integer"}, "column": {"type": "integer"},
+                     "code": {"type": "string"}, "message": {"type": "string"},
+                     "spec_refs": {"type": "array", "items": {"type": "string"}}}}},
+    "warning_count": {"type": "integer", "minimum": 0}
+  },
+  "$defs": {
+    "step": {"type": "object", "required": ["status"],
+      "properties": {"status": {"enum": ["ok", "failed", "timed_out", "skipped"]},
+                     "exit_code": {"type": ["integer", "null"]},
+                     "seconds": {"type": "number"},
+                     "output_tail": {"type": "string"}}}
+  }
+}

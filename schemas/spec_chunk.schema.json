@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "spec_chunk (what the LLM returns for one chunk)",
+  "type": "object",
+  "required": ["entities", "rules", "screens", "workflows", "reports", "open_questions"],
+  "properties": {
+    "entities": {"type": "array", "items": {
+      "type": "object", "required": ["name", "description", "fields", "inferred", "source_ref"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "description": {"type": "string"}, "inferred": {"type": "boolean"},
+        "fields": {"type": "array", "items": {"type": "object", "required": ["name", "type"],
+          "properties": {"name": {"type": "string", "minLength": 1}, "type": {"type": "string"},
+                         "required": {"type": "boolean"}, "notes": {"type": "string"}}}},
+        "source_ref": {"type": "array", "items": {"type": "string"}}}}},
+    "rules": {"type": "array", "items": {
+      "type": "object", "required": ["name", "description", "source_ref"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "kind": {"type": "string"}, "description": {"type": "string"},
+        "inputs": {"type": "array", "items": {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}, "type": {"type": "string"}}}},
+        "outputs": {"type": "array", "items": {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}, "type": {"type": "string"}}}},
+        "entities": {"type": "array", "items": {"type": "string"}},
+        "source_ref": {"type": "array", "items": {"type": "string"}}}}},
+    "screens": {"type": "array", "items": {
+      "type": "object", "required": ["name", "purpose", "controls", "actions", "inferred", "source_ref"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "purpose": {"type": "string"}, "inferred": {"type": "boolean"},
+        "entities": {"type": "array", "items": {"type": "string"}},
+        "controls": {"type": "array", "items": {"type": "object", "required": ["name", "type"],
+          "properties": {"name": {"type": "string"}, "type": {"type": "string"}, "label": {"type": "string"}, "binds_to": {"type": "string"}}}},
+        "actions": {"type": "array", "items": {"type": "object", "required": ["name"],
+          "properties": {"name": {"type": "string"}, "description": {"type": "string"}, "calls": {"type": "string"}}}},
+        "source_ref": {"type": "array", "items": {"type": "string"}}}}},
+    "workflows": {"type": "array", "items": {
+      "type": "object", "required": ["name", "description", "steps", "source_ref"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "description": {"type": "string"}, "trigger": {"type": "string"},
+        "steps": {"type": "array", "items": {"type": ["string", "object"]}},
+        "source_ref": {"type": "array", "items": {"type": "string"}}}}},
+    "reports": {"type": "array", "items": {
+      "type": "object", "required": ["name", "format", "description", "source_ref"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "format": {"type": "string"}, "description": {"type": "string"},
+        "data_from": {"type": "array", "items": {"type": "string"}},
+        "source_ref": {"type": "array", "items": {"type": "string"}}}}},
+    "open_questions": {"type": "array", "items": {
+      "type": "object", "required": ["text"],
+      "properties": {"text": {"type": "string"}, "source_ref": {"type": "array", "items": {"type": "string"}}}}}
+  }
+}

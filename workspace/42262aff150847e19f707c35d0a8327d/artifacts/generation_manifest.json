@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "app_name": "InventoryOrdersSample",
+  "files": [
+    {
+      "path": ".gitignore",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample.sln",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Data/Item.json",
+      "kind": "data",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Infrastructure/Coerce.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Infrastructure/IRepository.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Infrastructure/JsonRepository.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Infrastructure/ReportFile.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Infrastructure/ResultFormatter.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/InventoryOrdersSample.csproj",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Models/IEntity.cs",
+      "kind": "model",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Models/Item.cs",
+      "kind": "model",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/Entities/Item.cshtml",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/Entities/Item.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/Index.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/Index.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/Shared/_Layout.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/_ViewImports.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Pages/_ViewStart.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Program.cs",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/Services/BusinessRules.Rules.cs",
+      "kind": "service",
+      "spec_refs": [
+        "RUL-001",
+        "RUL-002",
+        "RUL-003",
+        "RUL-004",
+        "RUL-005",
+        "RUL-006",
+        "RUL-007",
+        "RUL-008",
+        "RUL-009",
+        "RUL-010",
+        "RUL-011",
+        "RUL-012",
+        "RUL-013",
+        "RUL-014",
+        "RUL-015",
+        "RUL-016",
+        "RUL-017",
+        "RUL-018",
+        "RUL-019",
+        "RUL-020"
+      ],
+      "is_stub": true
+    },
+    {
+      "path": "InventoryOrdersSample/Services/BusinessRules.cs",
+      "kind": "service",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/appsettings.json",
+      "kind": "config",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "InventoryOrdersSample/wwwroot/css/site.css",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "README.md",
+      "kind": "docs",
+      "spec_refs": [],
+      "is_stub": false
+    }
+  ],
+  "stubs": [
+    {
+      "spec_id": "RUL-010",
+      "method": "ExportOrdersPDF",
+      "cause": "unsupported",
+      "reason": "Excel PDF export through COM (found by the rule check)."
+    },
+    {
+      "spec_id": "RUL-011",
+      "method": "EmailLowStockReport",
+      "cause": "unsupported",
+      "reason": "COM automation of another application (found by the rule check)."
+    }
+  ],
+  "uncovered_spec_items": [],
+  "flags": [
+    {
+      "code": "STUB_GENERATED",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "RUL-010",
+      "snippet": null,
+      "reason": "ExportOrdersPDF was written as a stub: Excel PDF export through COM (found by the rule check).",
+      "suggested_action": "Implement it by hand. The original VBA is quoted in the code."
+    },
+    {
+      "code": "STUB_GENERATED",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "RUL-011",
+      "snippet": null,
+      "reason": "EmailLowStockReport was written as a stub: COM automation of another application (found by the rule check).",
+      "suggested_action": "Implement it by hand. The original VBA is quoted in the code."
+    }
+  ],
+  "usage": {
+    "tokens": 3365,
+    "calls": 3,
+    "batches": 3
+  }
+}

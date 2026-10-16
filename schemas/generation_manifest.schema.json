@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "generation_manifest",
+  "type": "object",
+  "required": ["schema_version", "app_name", "files", "stubs", "uncovered_spec_items", "flags", "usage"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "app_name": {"type": "string", "minLength": 1},
+    "files": {"type": "array", "items": {
+      "type": "object", "required": ["path", "kind", "spec_refs", "is_stub"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["scaffold", "model", "data", "repository", "service", "page", "config", "docs"]},
+        "spec_refs": {"type": "array", "items": {"type": "string"}},
+        "is_stub": {"type": "boolean"}}}},
+    "stubs": {"type": "array", "items": {
+      "type": "object", "required": ["spec_id", "method", "cause", "reason"],
+      "properties": {
+        "spec_id": {"type": "string"}, "method": {"type": "string"},
+        "cause": {"enum": ["unsupported", "generation_failed"]}, "reason": {"type": "string"}}}},
+    "uncovered_spec_items": {"type": "array", "items": {
+      "type": "object", "required": ["id", "reason"],
+      "properties": {"id": {"type": "string"}, "reason": {"type": "string"}}}},
+    "flags": {"type": "array", "items": {
+      "type": "object", "required": ["code", "severity", "reason"],
+      "properties": {"code": {"type": "string"}, "severity": {"enum": ["Info", "Warning", "Blocker"]}, "reason": {"type": "string"}}}},
+    "usage": {"type": "object", "required": ["tokens", "calls", "batches"],
+      "properties": {"tokens": {"type": "integer", "minimum": 0}, "calls": {"type": "integer", "minimum": 0}, "batches": {"type": "integer", "minimum": 0}}}
+  }
+}
