@@ -24,7 +24,8 @@ def _groq(settings) -> LlmProvider:
         raise BlockerError("GROQ_MODEL is not set. Add the model name to backend/.env and restart the server.")
     from app.core.llm.groq import GroqProvider
     try:
-        return GroqProvider(settings.groq_api_key, settings.groq_model, settings.llm_temperature)
+        return GroqProvider(settings.groq_api_key, settings.groq_model, settings.llm_temperature,
+                            reasoning_effort=settings.groq_reasoning_effort)
     except LlmPermanentError as exc:
         raise BlockerError(str(exc)) from exc
 

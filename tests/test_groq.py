@@ -4,8 +4,9 @@ import unittest
 import httpx
 
 from app.core.errors import BlockerError
-from app.core.llm import LlmPermanentError, LlmTransientError, create_provider
-from app.core.llm.groq import GroqProvider, classify_status
+from app.core.llm import LlmPermanentError, LlmRequestTooLarge, LlmTransientError, create_provider
+from app.core.llm import groq
+from app.core.llm.groq import GroqProvider, classify_status, parse_duration
 from tests.fakes import fake_settings
 
 
@@ -91,6 +92,59 @@ class FactoryTests(unittest.TestCase):
         p = create_provider(fake_settings(llm_provider="groq", groq_api_key="k", groq_model="m"))
         self.assertIsInstance(p, GroqProvider)
         self.assertEqual(p.model, "m")
+
+
+class GroqLimitTests(unittest.TestCase):
+    def setUp(self):
+        groq._learned_tpm.clear()
+
+    def test_gpt_oss_gets_low_reasoning_by_default(self):
+        seen = {}
+
+        def handler(request):
+            seen["body"] = json.loads(request.content)
+            return ok("{}")
+        provider_with(handler).generate("s", "p")
+        self.assertEqual(seen["body"]["reasoning_effort"], "low")
+
+    def test_reasoning_can_be_set_or_turned_off(self):
+        self.assertEqual(GroqProvider("k", "openai/gpt-oss-120b", reasoning_effort="medium").reasoning_effort, "medium")
+        self.assertEqual(GroqProvider("k", "openai/gpt-oss-120b", reasoning_effort="off").reasoning_effort, "")
+        self.assertEqual(GroqProvider("k", "llama-3.3-70b-versatile").reasoning_effort, "")
+
+    def test_learns_tokens_per_minute_from_headers(self):
+        p = provider_with(lambda r: httpx.Response(200, headers={"x-ratelimit-limit-tokens": "8000"},
+                                                   json={"choices": [{"message": {"content": "{}"}}]}))
+        self.assertEqual(p.tokens_per_minute, 0)
+        p.generate("s", "p")
+        self.assertEqual(p.tokens_per_minute, 8000)
+        self.assertEqual(GroqProvider("k", "openai/gpt-oss-120b").tokens_per_minute, 8000)
+
+    def test_413_is_request_too_large_and_teaches_the_limit(self):
+        body = {"error": {"code": "rate_limit_exceeded",
+                          "message": "Request too large for model on tokens per minute (TPM): Limit 8000, Requested 8311"}}
+        p = provider_with(lambda r: httpx.Response(413, json=body))
+        with self.assertRaises(LlmRequestTooLarge):
+            p.generate("s", "p")
+        self.assertEqual(p.tokens_per_minute, 8000)
+
+    def test_429_carries_retry_after(self):
+        p = provider_with(lambda r: httpx.Response(429, headers={"retry-after": "7"}, json={}))
+        with self.assertRaises(LlmTransientError) as e:
+            p.generate("s", "p")
+        self.assertEqual(e.exception.retry_after, 7.0)
+
+    def test_daily_limit_is_permanent(self):
+        body = {"error": {"message": "Rate limit reached on tokens per day (TPD): Limit 200000"}}
+        with self.assertRaises(LlmPermanentError) as e:
+            provider_with(lambda r: httpx.Response(429, json=body)).generate("s", "p")
+        self.assertIn("daily", str(e.exception))
+
+    def test_parse_duration(self):
+        self.assertEqual(parse_duration("7"), 7.0)
+        self.assertAlmostEqual(parse_duration("2m59.5s"), 179.5)
+        self.assertAlmostEqual(parse_duration("120ms"), 0.12)
+        self.assertIsNone(parse_duration(None))
 
 
 if __name__ == "__main__":

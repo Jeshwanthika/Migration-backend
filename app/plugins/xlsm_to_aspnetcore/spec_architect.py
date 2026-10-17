@@ -10,10 +10,12 @@ from pathlib import Path
 
 from app.core.errors import BlockerError
 from app.core.files import read_json, write_json_atomic
-from app.core.llm import LlmError, LlmGateway, LlmPermanentError, LlmSchemaError, LlmTransientError, create_provider
+from app.core.llm import (
+    LlmError, LlmGateway, LlmPermanentError, LlmRequestTooLarge, LlmSchemaError, LlmTransientError, create_provider,
+)
 from app.core.models import SEV_INFO, SEV_WARNING, new_flag
 from app.core.schema_validation import schema_errors, validate_artifact
-from app.plugins.xlsm_to_aspnetcore.chunker import make_chunks
+from app.plugins.xlsm_to_aspnetcore.chunker import halves, make_chunks
 from app.plugins.xlsm_to_aspnetcore.procedures import split_module
 from app.plugins.xlsm_to_aspnetcore.spec_merge import apply_entity_merges, finish_spec, merge_chunks
 from app.plugins.xlsm_to_aspnetcore.spec_prompts import (
@@ -59,16 +61,41 @@ def build_spec(vba: dict, analysis: dict, gateway: LlmGateway, settings, progres
         per_module[module["name"]] = per_module.get(module["name"], 0) + 1
     seen_in_module: dict = {}
 
-    for index, (module, declarations, records) in enumerate(units, start=1):
+    queue = list(units)
+    total = len(units)
+    index = 0
+    while queue:
+        module, declarations, records = queue.pop(0)
         name = module["name"]
-        seen_in_module[name] = seen_in_module.get(name, 0) + 1
-        progress(f"Writing the spec, {name} (chunk {index} of {len(units)})")
         so_far = merge_chunks(results)
         prompt = build_chunk_prompt(module, declarations, records, so_far["entities"], so_far["rules"], project_refs,
-                                    seen_in_module[name], per_module[name])
+                                    seen_in_module.get(name, 0) + 1, per_module[name])
+        if len(records) > 1 and not gateway.fits(SYSTEM_PROMPT, prompt):
+            # Too large for one request under the provider's rate limit: send it in two halves.
+            queue[:0] = [(module, declarations, half) for half in halves(records)]
+            per_module[name] += 1
+            total += 1
+            continue
+        index += 1
+        seen_in_module[name] = seen_in_module.get(name, 0) + 1
+        progress(f"Writing the spec, {name} (chunk {index} of {total})")
         try:
             data = gateway.call_json(NODE, SYSTEM_PROMPT, prompt, validate=lambda d: schema_errors("spec_chunk", d))
             unreachable_in_a_row = 0
+        except LlmRequestTooLarge as exc:
+            if len(records) > 1:
+                queue[:0] = [(module, declarations, half) for half in halves(records)]
+                per_module[name] += 1
+                seen_in_module[name] -= 1
+                index -= 1
+                total += 1
+                continue
+            unreachable_in_a_row = 0
+            flags.append(new_flag("SPEC_CHUNK_FAILED", SEV_WARNING,
+                                  f"{records[0][0]['id']} is too large to send to the model in one request. Nothing was guessed for it. {exc}",
+                                  source_ref=records[0][0]["id"],
+                                  suggested_action="Specify this procedure by hand, or use a model or plan with a higher token limit."))
+            continue
         except LlmPermanentError as exc:
             raise BlockerError(str(exc)) from exc
         except (LlmTransientError, LlmSchemaError) as exc:
@@ -105,7 +132,7 @@ def build_spec(vba: dict, analysis: dict, gateway: LlmGateway, settings, progres
         except LlmError as exc:
             flags.append(new_flag("SPEC_RECONCILE_SKIPPED", SEV_INFO, f"Entity names were not cross-checked: {exc}"))
 
-    usage = {"tokens": gateway.tokens_used, "calls": gateway.calls, "chunks": len(units)}
+    usage = {"tokens": gateway.tokens_used, "calls": gateway.calls, "chunks": total}
     return finish_spec(parts, analysis, source_file, usage, flags)
 
 

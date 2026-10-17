@@ -15,3 +15,9 @@ def make_chunks(procedures: list, max_chars: int) -> list:
     if current:
         chunks.append(current)
     return chunks
+
+
+def halves(chunk: list) -> list:
+    """Split a chunk into two smaller ones, keeping source order. Used when a request is too large to send."""
+    middle = (len(chunk) + 1) // 2
+    return [chunk[:middle], chunk[middle:]]

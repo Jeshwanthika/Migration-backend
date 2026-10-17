@@ -57,11 +57,14 @@ class Settings:
     gemini_api_key: str = field(default="", repr=False)
     groq_model: str = ""
     groq_api_key: str = field(default="", repr=False)
+    groq_reasoning_effort: str | None = None  # None = automatic ("low" for gpt-oss models)
     llm_retries: int = 4
     llm_call_delay_seconds: float = 4.0
     llm_backoff_base_seconds: float = 2.0
     llm_backoff_max_seconds: float = 60.0
     llm_temperature: float = 0.1
+    llm_tokens_per_minute: int = 0  # 0 = use the limit the provider reports
+    llm_max_input_tokens: int = 0  # 0 = half of the tokens-per-minute limit, when one is known
     chunk_max_chars: int = 12000
     schema_reask: int = 2
     max_tokens_per_run: int = 0
@@ -88,11 +91,14 @@ class Settings:
             gemini_api_key=os.environ.get("GEMINI_API_KEY", ""),
             groq_model=os.environ.get("GROQ_MODEL", ""),
             groq_api_key=os.environ.get("GROQ_API_KEY", ""),
+            groq_reasoning_effort=os.environ.get("GROQ_REASONING_EFFORT") or None,
             llm_retries=_int("LLM_RETRIES", 4),
             llm_call_delay_seconds=_float("LLM_CALL_DELAY_SECONDS", 4.0),
             llm_backoff_base_seconds=_float("LLM_BACKOFF_BASE_SECONDS", 2.0),
             llm_backoff_max_seconds=_float("LLM_BACKOFF_MAX_SECONDS", 60.0),
             llm_temperature=_float("LLM_TEMPERATURE", 0.1),
+            llm_tokens_per_minute=_int("LLM_TOKENS_PER_MINUTE", 0),
+            llm_max_input_tokens=_int("LLM_MAX_INPUT_TOKENS", 0),
             chunk_max_chars=_int("CHUNK_MAX_CHARS", 12000),
             schema_reask=_int("SCHEMA_REASK", 2),
             max_tokens_per_run=_int("MAX_TOKENS_PER_RUN", 0),

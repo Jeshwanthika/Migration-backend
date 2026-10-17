@@ -3,7 +3,7 @@
 Split of work:
 * The platform writes the scaffold, entity classes, repositories, every page and every method
   signature, so the pieces always fit together.
-* Gemini writes only method bodies for rules, workflows and reports, in batches.
+* The model writes only method bodies for rules, workflows and reports, in batches.
 * Anything unsupported, and any body that fails the safety checks, becomes a stub that throws
   NotImplementedException and carries the original VBA in a comment.
 """
@@ -14,9 +14,12 @@ from pathlib import Path
 
 from app.core.errors import BlockerError
 from app.core.files import read_json, write_json_atomic
-from app.core.llm import LlmGateway, LlmPermanentError, LlmSchemaError, LlmTransientError, create_provider
+from app.core.llm import (
+    LlmGateway, LlmPermanentError, LlmRequestTooLarge, LlmSchemaError, LlmTransientError, create_provider,
+)
 from app.core.models import SEV_INFO, SEV_WARNING, new_flag
 from app.core.schema_validation import schema_errors, validate_artifact
+from app.plugins.xlsm_to_aspnetcore.chunker import halves
 from app.plugins.xlsm_to_aspnetcore.gen.methods import (
     SYSTEM_PROMPT, build_batch_prompt, method_source, partial_file, validate_batch,
 )
@@ -166,9 +169,19 @@ def generate_app(spec: dict, vba: dict, analysis: dict, gateway: LlmGateway, set
     batches = _batches(llm_methods, sources, settings.chunk_max_chars)
     produced_any = False
     unreachable_in_a_row = 0
-    for index, batch in enumerate(batches, start=1):
-        progress(f"Generating code, batch {index} of {len(batches)}")
+    queue = list(batches)
+    total = len(batches)
+    index = 0
+    while queue:
+        batch = queue.pop(0)
         prompt = build_batch_prompt(plan, batch, sources)
+        if len(batch) > 1 and not gateway.fits(SYSTEM_PROMPT, prompt):
+            # Too large for one request under the provider's rate limit: send it in two halves.
+            queue[:0] = halves(batch)
+            total += 1
+            continue
+        index += 1
+        progress(f"Generating code, batch {index} of {total}")
         good: dict = {}
 
         def validate(data, _batch=batch, _good=good):
@@ -183,6 +196,13 @@ def generate_app(spec: dict, vba: dict, analysis: dict, gateway: LlmGateway, set
         try:
             gateway.call_json(NODE, SYSTEM_PROMPT, prompt, validate=validate)
             unreachable_in_a_row = 0
+        except LlmRequestTooLarge as exc:
+            if len(batch) > 1 and not good:
+                queue[:0] = halves(batch)
+                index -= 1
+                total += 1
+                continue
+            failure = exc
         except LlmPermanentError as exc:
             raise BlockerError(str(exc)) from exc
         except (LlmTransientError, LlmSchemaError) as exc:
@@ -226,7 +246,7 @@ def generate_app(spec: dict, vba: dict, analysis: dict, gateway: LlmGateway, set
              for m in plan.methods if m.id in stub_info]
     uncovered = [{"id": s["spec_id"], "reason": s["reason"]} for s in stubs if s["cause"] == "generation_failed"]
     fs.add("README.md", readme(plan, spec, stubs, uncovered), "docs")
-    usage = {"tokens": gateway.tokens_used, "calls": gateway.calls, "batches": len(batches)}
+    usage = {"tokens": gateway.tokens_used, "calls": gateway.calls, "batches": total}
     manifest = {
         "schema_version": "1.0", "app_name": app,
         "files": [{"path": p, "kind": i["kind"], "spec_refs": i["spec_refs"], "is_stub": i["is_stub"]} for p, i in sorted(fs.items.items())],

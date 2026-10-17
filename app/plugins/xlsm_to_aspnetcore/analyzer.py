@@ -9,11 +9,13 @@ import re
 
 from app.core.errors import BlockerError
 from app.core.files import read_json, write_json_atomic
-from app.core.llm import LlmGateway, LlmPermanentError, LlmSchemaError, LlmTransientError, create_provider
+from app.core.llm import (
+    LlmGateway, LlmPermanentError, LlmRequestTooLarge, LlmSchemaError, LlmTransientError, create_provider,
+)
 from app.core.models import SEV_INFO, SEV_WARNING, new_flag
 from app.core.schema_validation import schema_errors, validate_artifact
 from app.plugins.xlsm_to_aspnetcore.analyzer_prompts import SYSTEM_PROMPT, build_prompt
-from app.plugins.xlsm_to_aspnetcore.chunker import make_chunks
+from app.plugins.xlsm_to_aspnetcore.chunker import halves, make_chunks
 from app.plugins.xlsm_to_aspnetcore.procedures import procedure_id, signature, split_module
 from app.plugins.xlsm_to_aspnetcore.scanner import IGNORABLE, scan_declarations, scan_procedure
 
@@ -124,9 +126,10 @@ def analyze_modules(vba: dict, gateway: LlmGateway, settings, progress=lambda te
         llm_constructs = [[] for _ in procedures]
         module_summary = ""
 
-        for part, chunk in enumerate(chunks, start=1):
-            done_chunks += 1
-            progress(f"Analyzing {name}, part {part} of {len(chunks)} (chunk {done_chunks} of {total_chunks})")
+        queue = list(chunks)
+        part = 0
+        while queue:
+            chunk = queue.pop(0)
             in_chunk = {id(p) for p in chunk}
             other_lines = []
             for p in procedures:
@@ -138,14 +141,35 @@ def analyze_modules(vba: dict, gateway: LlmGateway, settings, progress=lambda te
                     line += f": {rec['summary']}"
                 other_lines.append(line)
             other_names = [f"{m}.{n}" for m, names in all_signatures.items() if m != name for n in names]
-            prompt = build_prompt(module, declarations, other_lines, other_names, chunk, part, len(chunks))
+            parts = part + 1 + len(queue)
+            prompt = build_prompt(module, declarations, other_lines, other_names, chunk, part + 1, parts)
+            if len(chunk) > 1 and not gateway.fits(SYSTEM_PROMPT, prompt):
+                # Too large for one request under the provider's rate limit: send it in two halves.
+                queue[:0] = halves(chunk)
+                total_chunks += 1
+                continue
+            part += 1
+            done_chunks += 1
+            progress(f"Analyzing {name}, part {part} of {parts} (chunk {done_chunks} of {total_chunks})")
+            failure = None
             try:
                 data = gateway.call_json("analyzer", SYSTEM_PROMPT, prompt,
                                          validate=lambda d: schema_errors("analysis_chunk", d))
                 unreachable_in_a_row = 0
+            except LlmRequestTooLarge as exc:
+                if len(chunk) > 1:
+                    queue[:0] = halves(chunk)
+                    total_chunks += 1
+                    part -= 1
+                    done_chunks -= 1
+                    continue
+                failure = exc
             except LlmPermanentError as exc:
                 raise BlockerError(str(exc)) from exc
             except (LlmTransientError, LlmSchemaError) as exc:
+                failure = exc
+            if failure is not None:
+                exc = failure
                 if isinstance(exc, LlmTransientError):
                     unreachable_in_a_row += 1
                     if unreachable_in_a_row >= MAX_CONSECUTIVE_UNREACHABLE:
