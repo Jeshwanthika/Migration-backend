@@ -1,0 +1,15 @@
+@page
+@model ReportsModel
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h1>Reports and exports</h1>
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="message todo">@Model.Message</div>
+}
+
+<h2>OrderSummary <span class="muted">(xlsx)</span></h2>
+<p>Generates a summary sheet listing each order (OrderId, Sku, Region, Total) and a grand total for all processed orders</p>
+<a class="button" asp-page="/Reports" asp-page-handler="OrderSummaryReport">Download</a>

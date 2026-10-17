@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "app_name": "SampleOrdersPricing",
+  "dotnet_version": "8.0.426",
+  "result": "passed",
+  "restore": {
+    "status": "ok",
+    "exit_code": 0,
+    "seconds": 0.8,
+    "output_tail": "  Determining projects to restore...\r\n  Restored C:\\Users\\Jash\\Downloads\\legacy_migration_platform\\backend\\workspace\\2caeb1f04442436a97c6cc8c2c28d694\\output\\app\\SampleOrdersPricing\\SampleOrdersPricing.csproj (in 70 ms).\r\n\n"
+  },
+  "build": {
+    "status": "ok",
+    "exit_code": 0,
+    "seconds": 5.0,
+    "output_tail": "\n"
+  },
+  "errors": [],
+  "warning_count": 0
+}

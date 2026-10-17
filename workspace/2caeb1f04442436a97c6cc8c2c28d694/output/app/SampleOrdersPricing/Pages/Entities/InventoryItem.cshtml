@@ -1,0 +1,67 @@
+@page
+@model InventoryItemModel
+@{
+    ViewData["Title"] = "InventoryItem";
+}
+
+<h1>InventoryItem</h1>
+<p class="muted">Represents an inventory item with stock levels, usage metrics and valuation used for reorder calculations and ABC classification.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>OnHand</th>
+            <th>ReorderPoint</th>
+            <th>LeadTimeDays</th>
+            <th>AvgDailyUsage</th>
+            <th>PackSize</th>
+            <th>AnnualValue</th>
+            <th>TotalValue</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model.Items)
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.OnHand</td>
+                <td>@row.ReorderPoint</td>
+                <td>@row.LeadTimeDays</td>
+                <td>@row.AvgDailyUsage</td>
+                <td>@row.PackSize</td>
+                <td>@row.AnnualValue</td>
+                <td>@row.TotalValue</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@row.Id">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (!Model.Items.Any())
+{
+    <p class="muted">No records yet.</p>
+}
+
+<h2>Add a record</h2>
+<form method="post" asp-page-handler="Add">
+    <label asp-for="Item.OnHand">OnHand</label>
+    <input asp-for="Item.OnHand" />
+    <label asp-for="Item.ReorderPoint">ReorderPoint</label>
+    <input asp-for="Item.ReorderPoint" />
+    <label asp-for="Item.LeadTimeDays">LeadTimeDays</label>
+    <input asp-for="Item.LeadTimeDays" />
+    <label asp-for="Item.AvgDailyUsage">AvgDailyUsage</label>
+    <input asp-for="Item.AvgDailyUsage" />
+    <label asp-for="Item.PackSize">PackSize</label>
+    <input asp-for="Item.PackSize" />
+    <label asp-for="Item.AnnualValue">AnnualValue</label>
+    <input asp-for="Item.AnnualValue" />
+    <label asp-for="Item.TotalValue">TotalValue</label>
+    <input asp-for="Item.TotalValue" />
+    <button type="submit">Add</button>
+</form>

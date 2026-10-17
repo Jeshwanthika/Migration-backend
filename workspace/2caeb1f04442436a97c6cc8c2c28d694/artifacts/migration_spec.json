@@ -1,0 +1,779 @@
+{
+  "schema_version": "1.0",
+  "source_file": "Sample_Orders_Pricing.xlsm",
+  "notes": [
+    "Only the VBA code was analyzed. Workbook data, cell contents and UserForm layouts were not available.",
+    "Entities, fields and screen controls are inferred from how the code uses sheets, ranges, forms and message boxes.",
+    "Every element lists the procedures it came from in source_ref."
+  ],
+  "entities": [
+    {
+      "id": "ENT-001",
+      "name": "OrderLine",
+      "description": "Represents a single line item in an order, containing product SKU, quantity, and unit price.",
+      "fields": [
+        {
+          "name": "Sku",
+          "type": "string",
+          "required": true,
+          "notes": "Corresponds to the SKU field in the OrderLine type"
+        },
+        {
+          "name": "Quantity",
+          "type": "int",
+          "required": true,
+          "notes": "Corresponds to the Quantity field in the OrderLine type"
+        },
+        {
+          "name": "UnitPrice",
+          "type": "decimal",
+          "required": true,
+          "notes": "Corresponds to the UnitPrice field in the OrderLine type"
+        }
+      ],
+      "inferred": false,
+      "source_ref": [
+        "modPricing"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "ENT-002",
+      "name": "InventoryItem",
+      "description": "Represents an inventory item with stock levels, usage metrics and valuation used for reorder calculations and ABC classification.",
+      "fields": [
+        {
+          "name": "OnHand",
+          "type": "int",
+          "required": true,
+          "notes": "Current quantity on hand, used in NeedsReorder, SuggestedOrderQty, DaysOfStock"
+        },
+        {
+          "name": "ReorderPoint",
+          "type": "int",
+          "required": true,
+          "notes": "Threshold quantity that triggers a reorder, used in NeedsReorder"
+        },
+        {
+          "name": "LeadTimeDays",
+          "type": "int",
+          "required": true,
+          "notes": "Supplier lead time in days, used in NeedsReorder and SuggestedOrderQty"
+        },
+        {
+          "name": "AvgDailyUsage",
+          "type": "decimal",
+          "required": true,
+          "notes": "Average daily consumption, used in multiple calculations"
+        },
+        {
+          "name": "PackSize",
+          "type": "int",
+          "required": true,
+          "notes": "Quantity per purchase pack, used in SuggestedOrderQty"
+        },
+        {
+          "name": "AnnualValue",
+          "type": "decimal",
+          "required": true,
+          "notes": "Yearly monetary value of the item, used in ClassifyAbc"
+        },
+        {
+          "name": "TotalValue",
+          "type": "decimal",
+          "required": true,
+          "notes": "Total value of all items for ABC share calculation"
+        }
+      ],
+      "inferred": true,
+      "source_ref": [
+        "modInventory.NeedsReorder",
+        "modInventory.SuggestedOrderQty",
+        "modInventory.ClassifyAbc",
+        "modInventory.DaysOfStock"
+      ],
+      "support": "supported"
+    }
+  ],
+  "rules": [
+    {
+      "id": "RUL-001",
+      "name": "GetTierDiscount",
+      "kind": "calculation",
+      "description": "Returns a discount rate based on the customer's tier: Silver = 5 %, Gold = 10 %, Platinum = 15 %, otherwise 0 %.",
+      "inputs": [
+        {
+          "name": "tier",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "discountRate",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modPricing.GetTierDiscount"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-002",
+      "name": "GetVolumeDiscount",
+      "kind": "calculation",
+      "description": "Returns a discount rate based on the ordered quantity: ≥100 → 12 %, ≥50 → 8 %, ≥10 → 3 %, otherwise 0 %.",
+      "inputs": [
+        {
+          "name": "qty",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "discountRate",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modPricing.GetVolumeDiscount"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-003",
+      "name": "GetTaxRate",
+      "kind": "calculation",
+      "description": "Returns the tax rate for a given region; specific rates for CA, NY, NJ, TX, zero for OR/MT/NH/DE, otherwise the default rate of 8 %.",
+      "inputs": [
+        {
+          "name": "region",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "taxRate",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modPricing.GetTaxRate"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-004",
+      "name": "CalculateLineTotal",
+      "kind": "calculation",
+      "description": "Computes the line total by applying tier and volume discounts to the gross amount (quantity × unit price), capping the combined discount at 25 %, and rounding to two decimals.",
+      "inputs": [
+        {
+          "name": "line",
+          "type": "OrderLine"
+        },
+        {
+          "name": "tier",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "lineTotal",
+          "type": "decimal"
+        }
+      ],
+      "entities": [
+        "OrderLine"
+      ],
+      "source_ref": [
+        "modPricing.CalculateLineTotal"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-005",
+      "name": "CalculateShipping",
+      "kind": "calculation",
+      "description": "Determines shipping cost based on subtotal, weight, and whether express shipping is selected; free shipping when subtotal ≥ 150 and not express. Weight tiers: ≤1 kg → 4.99, ≤5 kg → 9.99, ≤20 kg → 19.99, above 20 kg → 19.99 + 0.75 × (excess kg). Express shipping doubles the cost. Result rounded to two decimals.",
+      "inputs": [
+        {
+          "name": "subtotal",
+          "type": "decimal"
+        },
+        {
+          "name": "weightKg",
+          "type": "decimal"
+        },
+        {
+          "name": "expressShipping",
+          "type": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "shippingCost",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modPricing.CalculateShipping"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-006",
+      "name": "ApplyPromoCode",
+      "kind": "calculation",
+      "description": "Applies a promotional discount to the subtotal: WELCOME10 gives 10 % off, SAVE20 subtracts $20 if subtotal ≥ 200, otherwise no change.",
+      "inputs": [
+        {
+          "name": "subtotal",
+          "type": "decimal"
+        },
+        {
+          "name": "promoCode",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "adjustedSubtotal",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modPricing.ApplyPromoCode"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-007",
+      "name": "CalculateOrderTotal",
+      "kind": "calculation",
+      "description": "Aggregates line totals for all order lines, applies any promotional code, adds shipping cost, computes tax based on region, and returns the final order total.",
+      "inputs": [
+        {
+          "name": "lines",
+          "type": "OrderLine[]"
+        },
+        {
+          "name": "tier",
+          "type": "int"
+        },
+        {
+          "name": "region",
+          "type": "string"
+        },
+        {
+          "name": "weightKg",
+          "type": "decimal"
+        },
+        {
+          "name": "expressShipping",
+          "type": "bool"
+        },
+        {
+          "name": "promoCode",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "orderTotal",
+          "type": "decimal"
+        }
+      ],
+      "entities": [
+        "OrderLine"
+      ],
+      "source_ref": [
+        "modPricing.CalculateOrderTotal"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-008",
+      "name": "NeedsReorder",
+      "kind": "calculation",
+      "description": "Determines whether inventory should be reordered by comparing on‑hand quantity to the reorder point and by projecting stock after lead time using average daily usage.",
+      "inputs": [
+        {
+          "name": "onHand",
+          "type": "int"
+        },
+        {
+          "name": "reorderPoint",
+          "type": "int"
+        },
+        {
+          "name": "leadTimeDays",
+          "type": "int"
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "decimal"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "needsReorder",
+          "type": "bool"
+        }
+      ],
+      "entities": [
+        "InventoryItem"
+      ],
+      "source_ref": [
+        "modInventory.NeedsReorder"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-009",
+      "name": "SuggestedOrderQty",
+      "kind": "calculation",
+      "description": "Computes the recommended purchase quantity, rounding up to the nearest pack size and adding a safety buffer based on lead time and average daily usage.",
+      "inputs": [
+        {
+          "name": "onHand",
+          "type": "int"
+        },
+        {
+          "name": "leadTimeDays",
+          "type": "int"
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "decimal"
+        },
+        {
+          "name": "packSize",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "orderQty",
+          "type": "int"
+        }
+      ],
+      "entities": [
+        "InventoryItem"
+      ],
+      "source_ref": [
+        "modInventory.SuggestedOrderQty"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-010",
+      "name": "ClassifyAbc",
+      "kind": "calculation",
+      "description": "Assigns an ABC category (A, B, or C) to an item based on its share of total annual value; >=20% = A, >=5% = B, otherwise C.",
+      "inputs": [
+        {
+          "name": "annualValue",
+          "type": "decimal"
+        },
+        {
+          "name": "totalValue",
+          "type": "decimal"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "category",
+          "type": "string"
+        }
+      ],
+      "entities": [
+        "InventoryItem"
+      ],
+      "source_ref": [
+        "modInventory.ClassifyAbc"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-011",
+      "name": "SafeDivide",
+      "kind": "calculation",
+      "description": "Divides numerator by denominator and returns 0 if division would cause an error (e.g., divide‑by‑zero).",
+      "inputs": [
+        {
+          "name": "numerator",
+          "type": "decimal"
+        },
+        {
+          "name": "denominator",
+          "type": "decimal"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modInventory.SafeDivide"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-012",
+      "name": "SumPositive",
+      "kind": "calculation",
+      "description": "Aggregates only the positive numbers from an array of numeric values.",
+      "inputs": [
+        {
+          "name": "values",
+          "type": "decimal[]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "total",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modInventory.SumPositive"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-013",
+      "name": "DaysOfStock",
+      "kind": "calculation",
+      "description": "Estimates how many days current inventory will last given average daily usage; returns a large sentinel value when usage is zero.",
+      "inputs": [
+        {
+          "name": "onHand",
+          "type": "int"
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "decimal"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "days",
+          "type": "int"
+        }
+      ],
+      "entities": [
+        "InventoryItem"
+      ],
+      "source_ref": [
+        "modInventory.DaysOfStock"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-014",
+      "name": "MonthlyPayment",
+      "kind": "calculation",
+      "description": "Calculates the monthly payment for a loan given principal, annual interest rate (percent) and term in years, using the standard amortizing loan formula and rounding to two decimals.",
+      "inputs": [
+        {
+          "name": "principal",
+          "type": "decimal"
+        },
+        {
+          "name": "annualRatePct",
+          "type": "decimal"
+        },
+        {
+          "name": "years",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "monthlyPayment",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modFinance.MonthlyPayment"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-015",
+      "name": "TotalInterest",
+      "kind": "calculation",
+      "description": "Computes total interest paid over the life of a loan by multiplying the monthly payment by the total number of payments and subtracting the principal, rounding to two decimals.",
+      "inputs": [
+        {
+          "name": "principal",
+          "type": "decimal"
+        },
+        {
+          "name": "annualRatePct",
+          "type": "decimal"
+        },
+        {
+          "name": "years",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "totalInterest",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modFinance.TotalInterest"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-016",
+      "name": "BuildAmortization",
+      "kind": "calculation",
+      "description": "Generates a full amortization schedule as a two‑dimensional array (period, interest, principal, remaining balance) for each month of the loan term, rounding monetary values to two decimals.",
+      "inputs": [
+        {
+          "name": "principal",
+          "type": "decimal"
+        },
+        {
+          "name": "annualRatePct",
+          "type": "decimal"
+        },
+        {
+          "name": "years",
+          "type": "int"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "schedule",
+          "type": "array"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modFinance.BuildAmortization"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-017",
+      "name": "NetPresentValue",
+      "kind": "calculation",
+      "description": "Calculates the net present value of a series of cash flows discounted at a given annual rate (percent), summing each cash flow divided by (1+rate) raised to the period offset, rounding to two decimals.",
+      "inputs": [
+        {
+          "name": "ratePct",
+          "type": "decimal"
+        },
+        {
+          "name": "cashFlows",
+          "type": "array"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "npv",
+          "type": "decimal"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modFinance.NetPresentValue"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-018",
+      "name": "NormalizeSku",
+      "kind": "other",
+      "description": "Converts a raw SKU to uppercase, replaces spaces and underscores with hyphens, and truncates to 12 characters",
+      "inputs": [
+        {
+          "name": "rawSku",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "type": "string"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modText.NormalizeSku"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-019",
+      "name": "IsValidEmail",
+      "kind": "validation",
+      "description": "Checks that an email address contains exactly one '@' and a '.' after the '@' and before the end of the string",
+      "inputs": [
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "isValid",
+          "type": "bool"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modText.IsValidEmail"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-020",
+      "name": "ToTitleCase",
+      "kind": "other",
+      "description": "Converts a string to title case by capitalizing the first letter of each word",
+      "inputs": [
+        {
+          "name": "text",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "type": "string"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modText.ToTitleCase"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-021",
+      "name": "IsValidLuhn",
+      "kind": "validation",
+      "description": "Validates a numeric string using the Luhn algorithm (checksum)",
+      "inputs": [
+        {
+          "name": "digits",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "isValid",
+          "type": "bool"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modText.IsValidLuhn"
+      ],
+      "support": "supported"
+    },
+    {
+      "id": "RUL-022",
+      "name": "ParseTier",
+      "kind": "lookup",
+      "description": "Converts a tier description string to the corresponding CustomerTier enum value using case‑insensitive matching",
+      "inputs": [
+        {
+          "name": "text",
+          "type": "string"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "tier",
+          "type": "enum"
+        }
+      ],
+      "entities": [],
+      "source_ref": [
+        "modReporting.ParseTier"
+      ],
+      "support": "supported"
+    }
+  ],
+  "screens": [],
+  "workflows": [],
+  "reports": [
+    {
+      "id": "RPT-001",
+      "name": "OrderSummary",
+      "format": "xlsx",
+      "description": "Generates a summary sheet listing each order (OrderId, Sku, Region, Total) and a grand total for all processed orders",
+      "data_from": [
+        "OrderLine"
+      ],
+      "source_ref": [
+        "modReporting.BuildOrderSummary"
+      ],
+      "support": "supported"
+    }
+  ],
+  "stubs": [],
+  "flags": [
+    {
+      "code": "SPEC_OPEN_QUESTION",
+      "severity": "Warning",
+      "support": null,
+      "source_ref": "modPricing",
+      "snippet": null,
+      "reason": "How are OrderLine records persisted to the Orders worksheet (column mapping for SKU, Quantity, UnitPrice, etc.)?",
+      "suggested_action": "Decide this by hand. The model did not guess."
+    },
+    {
+      "code": "SPEC_OPEN_QUESTION",
+      "severity": "Warning",
+      "support": null,
+      "source_ref": "modInventory",
+      "snippet": null,
+      "reason": "How do the Orders and Summary worksheets map to the InventoryItem entity or other entities (e.g., order lines, totals) referenced elsewhere in the application?",
+      "suggested_action": "Decide this by hand. The model did not guess."
+    },
+    {
+      "code": "SPEC_OPEN_QUESTION",
+      "severity": "Warning",
+      "support": null,
+      "source_ref": "modReporting.BuildOrderSummary",
+      "snippet": null,
+      "reason": "What are the specific meanings of columns A‑I in the Orders worksheet (e.g., which column holds OrderId, CustomerTier, Region, etc.)?",
+      "suggested_action": "Decide this by hand. The model did not guess."
+    },
+    {
+      "code": "SPEC_OPEN_QUESTION",
+      "severity": "Warning",
+      "support": null,
+      "source_ref": "modReporting.ParseTier",
+      "snippet": null,
+      "reason": "What are the defined values of the CustomerTier enum (e.g., tierSilver, tierGold, tierPlatinum, tierStandard) and their underlying type?",
+      "suggested_action": "Decide this by hand. The model did not guess."
+    }
+  ],
+  "usage": {
+    "tokens": 16780,
+    "calls": 6,
+    "chunks": 5
+  }
+}

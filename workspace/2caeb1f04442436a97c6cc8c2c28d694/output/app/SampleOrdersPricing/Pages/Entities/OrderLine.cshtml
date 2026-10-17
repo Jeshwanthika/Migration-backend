@@ -1,0 +1,51 @@
+@page
+@model OrderLineModel
+@{
+    ViewData["Title"] = "OrderLine";
+}
+
+<h1>OrderLine</h1>
+<p class="muted">Represents a single line item in an order, containing product SKU, quantity, and unit price.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Sku</th>
+            <th>Quantity</th>
+            <th>UnitPrice</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model.Items)
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.Sku</td>
+                <td>@row.Quantity</td>
+                <td>@row.UnitPrice</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@row.Id">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (!Model.Items.Any())
+{
+    <p class="muted">No records yet.</p>
+}
+
+<h2>Add a record</h2>
+<form method="post" asp-page-handler="Add">
+    <label asp-for="Item.Sku">Sku</label>
+    <input asp-for="Item.Sku" />
+    <label asp-for="Item.Quantity">Quantity</label>
+    <input asp-for="Item.Quantity" />
+    <label asp-for="Item.UnitPrice">UnitPrice</label>
+    <input asp-for="Item.UnitPrice" />
+    <button type="submit">Add</button>
+</form>

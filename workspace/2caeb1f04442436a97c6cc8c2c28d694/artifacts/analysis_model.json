@@ -1,0 +1,820 @@
+{
+  "schema_version": "1.0",
+  "source_file": "Sample_Orders_Pricing.xlsm",
+  "modules": [
+    {
+      "name": "modPricing",
+      "type": "standard",
+      "summary": "Provides pricing calculations including discounts, tax, shipping, and order total.",
+      "line_count": 133,
+      "procedure_count": 7
+    },
+    {
+      "name": "modInventory",
+      "type": "standard",
+      "summary": "Provides inventory-related calculation utilities such as reorder detection, order quantity suggestion, ABC classification, safe division, positive sum aggregation, and days‑of‑stock estimation.",
+      "line_count": 77,
+      "procedure_count": 6
+    },
+    {
+      "name": "modFinance",
+      "type": "standard",
+      "summary": "Provides financial calculation utilities such as loan payment, interest, amortization schedule, and NPV.",
+      "line_count": 60,
+      "procedure_count": 4
+    },
+    {
+      "name": "modText",
+      "type": "standard",
+      "summary": "Utility functions for text processing and validation",
+      "line_count": 55,
+      "procedure_count": 4
+    },
+    {
+      "name": "modReporting",
+      "type": "standard",
+      "summary": "generates an order summary report on the Summary sheet",
+      "line_count": 61,
+      "procedure_count": 2
+    }
+  ],
+  "procedures": [
+    {
+      "id": "modPricing.GetTierDiscount",
+      "module": "modPricing",
+      "name": "GetTierDiscount",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "tier",
+          "type": "CustomerTier",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 21,
+      "end_line": 32,
+      "role": "calculation",
+      "summary": "Returns discount rate based on customer tier.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.GetVolumeDiscount",
+      "module": "modPricing",
+      "name": "GetVolumeDiscount",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "qty",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 34,
+      "end_line": 44,
+      "role": "calculation",
+      "summary": "Returns discount rate based on order quantity.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.GetTaxRate",
+      "module": "modPricing",
+      "name": "GetTaxRate",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "region",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 46,
+      "end_line": 61,
+      "role": "calculation",
+      "summary": "Returns tax rate for a given region, using a default if not listed.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.CalculateLineTotal",
+      "module": "modPricing",
+      "name": "CalculateLineTotal",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "line",
+          "type": "OrderLine",
+          "optional": false,
+          "by_val": false
+        },
+        {
+          "name": "tier",
+          "type": "CustomerTier",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 63,
+      "end_line": 73,
+      "role": "calculation",
+      "summary": "Computes line total after tier and volume discounts, capped by a maximum discount.",
+      "calls": [
+        "GetTierDiscount",
+        "GetVolumeDiscount"
+      ],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.CalculateShipping",
+      "module": "modPricing",
+      "name": "CalculateShipping",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "subtotal",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "weightKg",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "expressShipping",
+          "type": "Boolean",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 75,
+      "end_line": 96,
+      "role": "calculation",
+      "summary": "Calculates shipping cost based on subtotal, weight, and express option, with free shipping threshold.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.ApplyPromoCode",
+      "module": "modPricing",
+      "name": "ApplyPromoCode",
+      "kind": "Function",
+      "scope": "Private",
+      "params": [
+        {
+          "name": "subtotal",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "promoCode",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 98,
+      "end_line": 113,
+      "role": "calculation",
+      "summary": "Applies promotional discount to subtotal based on promo code.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modPricing.CalculateOrderTotal",
+      "module": "modPricing",
+      "name": "CalculateOrderTotal",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "lines",
+          "type": "OrderLine()",
+          "optional": false,
+          "by_val": false
+        },
+        {
+          "name": "tier",
+          "type": "CustomerTier",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "region",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "weightKg",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "expressShipping",
+          "type": "Boolean",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "promoCode",
+          "type": "String",
+          "optional": true,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 115,
+      "end_line": 133,
+      "role": "calculation",
+      "summary": "Aggregates line totals, applies promo code, adds shipping and tax to produce final order total.",
+      "calls": [
+        "CalculateLineTotal",
+        "ApplyPromoCode",
+        "CalculateShipping",
+        "GetTaxRate"
+      ],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.NeedsReorder",
+      "module": "modInventory",
+      "name": "NeedsReorder",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "onHand",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "reorderPoint",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "leadTimeDays",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Boolean",
+      "start_line": 6,
+      "end_line": 11,
+      "role": "calculation",
+      "summary": "Determines whether inventory needs to be reordered based on on‑hand quantity, reorder point, lead time, and average daily usage.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs are supported in .NET Core.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.SuggestedOrderQty",
+      "module": "modInventory",
+      "name": "SuggestedOrderQty",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "onHand",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "leadTimeDays",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "packSize",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Long",
+      "start_line": 13,
+      "end_line": 30,
+      "role": "calculation",
+      "summary": "Calculates the recommended order quantity, rounding up to the nearest pack size and applying a safety buffer.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs are supported in .NET Core.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.ClassifyAbc",
+      "module": "modInventory",
+      "name": "ClassifyAbc",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "annualValue",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "totalValue",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "String",
+      "start_line": 32,
+      "end_line": 46,
+      "role": "calculation",
+      "summary": "Classifies an item into A, B, or C category based on its share of total value.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs are supported in .NET Core.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.SafeDivide",
+      "module": "modInventory",
+      "name": "SafeDivide",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "numerator",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "denominator",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 48,
+      "end_line": 54,
+      "role": "calculation",
+      "summary": "Performs division and returns 0 if a runtime error (e.g., divide‑by‑zero) occurs.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "On Error handling maps to try/catch, which is supported.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.SumPositive",
+      "module": "modInventory",
+      "name": "SumPositive",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "values",
+          "type": "Double()",
+          "optional": false,
+          "by_val": false
+        }
+      ],
+      "returns": "Double",
+      "start_line": 56,
+      "end_line": 63,
+      "role": "calculation",
+      "summary": "Sums only the positive numbers in a passed array of doubles.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs are supported in .NET Core.",
+      "analyzed": true
+    },
+    {
+      "id": "modInventory.DaysOfStock",
+      "module": "modInventory",
+      "name": "DaysOfStock",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "onHand",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "avgDailyUsage",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Long",
+      "start_line": 65,
+      "end_line": 77,
+      "role": "calculation",
+      "summary": "Estimates how many days current inventory will last given average daily usage, with a safeguard for zero usage.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All constructs are supported in .NET Core.",
+      "analyzed": true
+    },
+    {
+      "id": "modFinance.MonthlyPayment",
+      "module": "modFinance",
+      "name": "MonthlyPayment",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "principal",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "annualRatePct",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "years",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 4,
+      "end_line": 20,
+      "role": "calculation",
+      "summary": "Calculates the monthly payment for a loan given principal, annual rate, and term in years.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All VBA constructs used (variables, arithmetic, If, Round) map directly to .NET.",
+      "analyzed": true
+    },
+    {
+      "id": "modFinance.TotalInterest",
+      "module": "modFinance",
+      "name": "TotalInterest",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "principal",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "annualRatePct",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "years",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Double",
+      "start_line": 22,
+      "end_line": 25,
+      "role": "calculation",
+      "summary": "Computes total interest paid over the life of a loan using MonthlyPayment.",
+      "calls": [
+        "MonthlyPayment"
+      ],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All VBA constructs used are directly supported in .NET.",
+      "analyzed": true
+    },
+    {
+      "id": "modFinance.BuildAmortization",
+      "module": "modFinance",
+      "name": "BuildAmortization",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "principal",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "annualRatePct",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "years",
+          "type": "Long",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Variant",
+      "start_line": 27,
+      "end_line": 51,
+      "role": "calculation",
+      "summary": "Generates an amortization schedule array for a loan.",
+      "calls": [
+        "MonthlyPayment"
+      ],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All VBA constructs used (arrays, ReDim, loops, arithmetic) are supported in .NET.",
+      "analyzed": true
+    },
+    {
+      "id": "modFinance.NetPresentValue",
+      "module": "modFinance",
+      "name": "NetPresentValue",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "ratePct",
+          "type": "Double",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "cashFlows",
+          "type": "Double()",
+          "optional": false,
+          "by_val": false
+        }
+      ],
+      "returns": "Double",
+      "start_line": 53,
+      "end_line": 60,
+      "role": "calculation",
+      "summary": "Calculates the net present value of a series of cash flows at a given discount rate.",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All VBA constructs used are directly supported in .NET.",
+      "analyzed": true
+    },
+    {
+      "id": "modText.NormalizeSku",
+      "module": "modText",
+      "name": "NormalizeSku",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "rawSku",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "String",
+      "start_line": 4,
+      "end_line": 11,
+      "role": "utility",
+      "summary": "Converts a raw SKU to uppercase, replaces spaces and underscores with hyphens, and truncates to 12 characters",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All used VBA constructs have direct equivalents in .NET",
+      "analyzed": true
+    },
+    {
+      "id": "modText.IsValidEmail",
+      "module": "modText",
+      "name": "IsValidEmail",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "email",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Boolean",
+      "start_line": 13,
+      "end_line": 22,
+      "role": "utility",
+      "summary": "Validates an email address format by checking positions of '@' and '.' characters",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All used VBA constructs have direct equivalents in .NET",
+      "analyzed": true
+    },
+    {
+      "id": "modText.ToTitleCase",
+      "module": "modText",
+      "name": "ToTitleCase",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "text",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "String",
+      "start_line": 24,
+      "end_line": 34,
+      "role": "utility",
+      "summary": "Converts a string to title case by capitalizing the first letter of each word",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All used VBA constructs have direct equivalents in .NET",
+      "analyzed": true
+    },
+    {
+      "id": "modText.IsValidLuhn",
+      "module": "modText",
+      "name": "IsValidLuhn",
+      "kind": "Function",
+      "scope": "Public",
+      "params": [
+        {
+          "name": "digits",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "Boolean",
+      "start_line": 36,
+      "end_line": 55,
+      "role": "utility",
+      "summary": "Validates a numeric string using the Luhn algorithm",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "All used VBA constructs have direct equivalents in .NET",
+      "analyzed": true
+    },
+    {
+      "id": "modReporting.BuildOrderSummary",
+      "module": "modReporting",
+      "name": "BuildOrderSummary",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 5,
+      "end_line": 52,
+      "role": "report",
+      "summary": "Creates a summary of orders from the Orders sheet, calculates each order total and a grand total, and writes the results to the Summary sheet",
+      "calls": [
+        "NormalizeSku",
+        "ParseTier",
+        "CalculateOrderTotal"
+      ],
+      "reads": [
+        "Orders worksheet cells (columns A to I)"
+      ],
+      "writes": [
+        "Summary worksheet cells (A1:D1, data rows, grand total)"
+      ],
+      "support": "supported",
+      "support_reason": "All used VBA constructs map directly to .NET equivalents",
+      "analyzed": true
+    },
+    {
+      "id": "modReporting.ParseTier",
+      "module": "modReporting",
+      "name": "ParseTier",
+      "kind": "Function",
+      "scope": "Private",
+      "params": [
+        {
+          "name": "text",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": "CustomerTier",
+      "start_line": 54,
+      "end_line": 61,
+      "role": "utility",
+      "summary": "Converts a tier description string to the corresponding CustomerTier enum value",
+      "calls": [],
+      "reads": [],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Only simple string manipulation and Select Case, which are fully supported",
+      "analyzed": true
+    }
+  ],
+  "flags": [
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modReporting:17",
+      "snippet": "Application.ScreenUpdating = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in BuildOrderSummary (2 places: lines 17, 50).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    }
+  ],
+  "usage": {
+    "tokens": 11375,
+    "calls": 5,
+    "chunks": 5
+  }
+}

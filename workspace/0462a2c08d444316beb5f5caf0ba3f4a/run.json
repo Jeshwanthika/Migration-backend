@@ -1,0 +1,60 @@
+{
+  "run_id": "0462a2c08d444316beb5f5caf0ba3f4a",
+  "skill_id": "xlsm-to-aspnetcore",
+  "filename": "Project_Expense_Tracker.xlsm",
+  "status": "FAILED",
+  "current_node": null,
+  "nodes": [
+    {
+      "name": "intake_check",
+      "status": "done",
+      "started_at": "2026-10-17T10:37:27+00:00",
+      "finished_at": "2026-10-17T10:37:27+00:00"
+    },
+    {
+      "name": "extractor",
+      "status": "done",
+      "started_at": "2026-10-17T10:37:27+00:00",
+      "finished_at": "2026-10-17T10:37:28+00:00"
+    },
+    {
+      "name": "analyzer",
+      "status": "done",
+      "started_at": "2026-10-17T10:37:28+00:00",
+      "finished_at": "2026-10-17T10:37:41+00:00"
+    },
+    {
+      "name": "spec_architect",
+      "status": "failed",
+      "started_at": "2026-10-17T10:37:41+00:00",
+      "finished_at": "2026-10-17T10:38:14+00:00"
+    },
+    {
+      "name": "generator",
+      "status": "skipped",
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "name": "validator",
+      "status": "skipped",
+      "started_at": null,
+      "finished_at": null
+    },
+    {
+      "name": "packager",
+      "status": "skipped",
+      "started_at": null,
+      "finished_at": null
+    }
+  ],
+  "tokens_used": 8807,
+  "detail": null,
+  "flags_count": 11,
+  "error": {
+    "node": "spec_architect",
+    "message": "Groq rejected the request as too large (413). Lower CHUNK_MAX_CHARS in backend/.env. Request too large for model `openai/gpt-oss-120b` in organization `org_01m54mmk95e4nv7hsm0tp8nvdc` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 8311, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+  },
+  "started_at": "2026-10-17T10:37:26+00:00",
+  "finished_at": "2026-10-17T10:38:14+00:00"
+}

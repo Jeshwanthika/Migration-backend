@@ -17,12 +17,24 @@ def _gemini(settings) -> LlmProvider:
         raise BlockerError(str(exc)) from exc
 
 
+def _groq(settings) -> LlmProvider:
+    if not settings.groq_api_key:
+        raise BlockerError("GROQ_API_KEY is not set. Add it to backend/.env and restart the server.")
+    if not settings.groq_model:
+        raise BlockerError("GROQ_MODEL is not set. Add the model name to backend/.env and restart the server.")
+    from app.core.llm.groq import GroqProvider
+    try:
+        return GroqProvider(settings.groq_api_key, settings.groq_model, settings.llm_temperature)
+    except LlmPermanentError as exc:
+        raise BlockerError(str(exc)) from exc
+
+
 def _mock(settings) -> LlmProvider:
     from app.core.llm.mock import MockProvider
     return MockProvider()
 
 
-PROVIDERS = {"gemini": _gemini, "mock": _mock}
+PROVIDERS = {"gemini": _gemini, "groq": _groq, "mock": _mock}
 
 
 def create_provider(settings) -> LlmProvider:

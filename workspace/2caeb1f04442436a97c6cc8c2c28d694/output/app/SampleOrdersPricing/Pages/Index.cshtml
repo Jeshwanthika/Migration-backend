@@ -1,0 +1,14 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Sample Orders Pricing</h1>
+<p class="muted">Migrated from <code>Sample_Orders_Pricing.xlsm</code>. Only the VBA logic was migrated. No workbook data was carried over.</p>
+
+<ul>
+    <li>Records: <a asp-page="/Entities/OrderLine">OrderLine</a></li>
+    <li>Records: <a asp-page="/Entities/InventoryItem">InventoryItem</a></li>
+    <li><a asp-page="/Reports">Reports and exports</a></li>
+</ul>

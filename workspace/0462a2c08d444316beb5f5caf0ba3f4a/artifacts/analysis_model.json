@@ -1,0 +1,390 @@
+{
+  "schema_version": "1.0",
+  "source_file": "Project_Expense_Tracker.xlsm",
+  "modules": [
+    {
+      "name": "ThisWorkbook",
+      "type": "workbook",
+      "summary": "Handles changes on the Expenses sheet to assign IDs and timestamps, and clear related data when a row becomes empty.",
+      "line_count": 42,
+      "procedure_count": 1
+    },
+    {
+      "name": "modExpenseTracker",
+      "type": "standard",
+      "summary": "Manages expense entry, reporting, and export functions.",
+      "line_count": 298,
+      "procedure_count": 8
+    }
+  ],
+  "procedures": [
+    {
+      "id": "ThisWorkbook.Workbook_SheetChange",
+      "module": "ThisWorkbook",
+      "name": "Workbook_SheetChange",
+      "kind": "Sub",
+      "scope": "Private",
+      "params": [
+        {
+          "name": "Sh",
+          "type": "Object",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "Target",
+          "type": "Range",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 13,
+      "end_line": 42,
+      "role": "event",
+      "summary": "Responds to changes on the Expenses sheet, assigning a new ID and timestamps or clearing row data when the row is empty.",
+      "calls": [],
+      "reads": [
+        "Sh.Range(\\\"C5:H1000\\",
+        ")",
+        "ws.Range(\"C\" & r & \":H\" & r)",
+        "ws.Range(\\\"A5:A1000\\",
+        "ws.Cells(r,\\\"A\\",
+        ").Value",
+        "ws.Cells(r,\\\"B\\"
+      ],
+      "writes": [
+        "ws.Range(\"A\" & r & \":B\" & r).ClearContents",
+        "ws.Cells(r,\\\"I\\",
+        ").ClearContents",
+        "ws.Cells(r,\\\"A\\",
+        ").Value",
+        "ws.Cells(r,\\\"B\\"
+      ],
+      "support": "partial",
+      "support_reason": "Worksheet_Change event cascade (found by the rule check).",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.AddExpense",
+      "module": "modExpenseTracker",
+      "name": "AddExpense",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 10,
+      "end_line": 79,
+      "role": "ui_handler",
+      "summary": "Validates entry form and appends a new expense record to the Expenses sheet.",
+      "calls": [
+        "ResetForm",
+        "ShowStatus"
+      ],
+      "reads": [
+        "Entry!C4",
+        "Entry!C5",
+        "Entry!C6",
+        "Entry!C7",
+        "Entry!C8",
+        "Setup!A9:A16",
+        "Setup!D9:D13",
+        "Expenses!A5:A1000"
+      ],
+      "writes": [
+        "Expenses!A? (new row) to I? (new row)"
+      ],
+      "support": "supported",
+      "support_reason": "All constructs map directly to .NET equivalents.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ClearForm",
+      "module": "modExpenseTracker",
+      "name": "ClearForm",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 81,
+      "end_line": 84,
+      "role": "ui_handler",
+      "summary": "Resets the entry form and clears the status message.",
+      "calls": [
+        "ResetForm"
+      ],
+      "reads": [],
+      "writes": [
+        "Entry!C11"
+      ],
+      "support": "supported",
+      "support_reason": "All constructs are straightforward sheet operations.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ResetForm",
+      "module": "modExpenseTracker",
+      "name": "ResetForm",
+      "kind": "Sub",
+      "scope": "Private",
+      "params": [],
+      "returns": null,
+      "start_line": 86,
+      "end_line": 91,
+      "role": "utility",
+      "summary": "Clears entry fields and sets the date field to today.",
+      "calls": [],
+      "reads": [],
+      "writes": [
+        "Entry!C4",
+        "Entry!C5:C9"
+      ],
+      "support": "supported",
+      "support_reason": "Simple range operations.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ShowStatus",
+      "module": "modExpenseTracker",
+      "name": "ShowStatus",
+      "kind": "Sub",
+      "scope": "Private",
+      "params": [
+        {
+          "name": "msg",
+          "type": "String",
+          "optional": false,
+          "by_val": true
+        },
+        {
+          "name": "isError",
+          "type": "Boolean",
+          "optional": false,
+          "by_val": true
+        }
+      ],
+      "returns": null,
+      "start_line": 93,
+      "end_line": 102,
+      "role": "utility",
+      "summary": "Displays a status message on the entry sheet, coloring it based on error flag.",
+      "calls": [],
+      "reads": [],
+      "writes": [
+        "Entry!C11"
+      ],
+      "support": "supported",
+      "support_reason": "Standard cell value and formatting.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.GenerateReport",
+      "module": "modExpenseTracker",
+      "name": "GenerateReport",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 107,
+      "end_line": 225,
+      "role": "report",
+      "summary": "Creates a new Report sheet with summary figures, category breakdown, and the five largest expenses.",
+      "calls": [],
+      "reads": [
+        "Summary!B3",
+        "Summary!B4",
+        "Summary!B5",
+        "Summary!B6",
+        "Summary!A11:F11",
+        "Summary!A12:F20",
+        "Expenses!F5:F1000",
+        "Expenses!C?",
+        "Expenses!D?",
+        "Expenses!E?",
+        "Expenses!G?"
+      ],
+      "writes": [
+        "Report!A1:...",
+        "Report!A4:B7",
+        "Report!A9:F19",
+        "Report!A22:E23",
+        "Report!A24:E28",
+        "Report!PageSetup"
+      ],
+      "support": "supported",
+      "support_reason": "All used Excel object model features are covered by migration support.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ExportReportPDF",
+      "module": "modExpenseTracker",
+      "name": "ExportReportPDF",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 230,
+      "end_line": 242,
+      "role": "report",
+      "summary": "Generates the report and exports it as a PDF file.",
+      "calls": [
+        "GenerateReport",
+        "ExportFolder"
+      ],
+      "reads": [
+        "Report! (entire sheet)"
+      ],
+      "writes": [
+        "File system PDF output"
+      ],
+      "support": "unsupported",
+      "support_reason": "Excel PDF export through COM (found by the rule check).",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ExportExpensesCSV",
+      "module": "modExpenseTracker",
+      "name": "ExportExpensesCSV",
+      "kind": "Sub",
+      "scope": "Public",
+      "params": [],
+      "returns": null,
+      "start_line": 244,
+      "end_line": 290,
+      "role": "report",
+      "summary": "Exports all expense rows to a CSV file.",
+      "calls": [
+        "ExportFolder"
+      ],
+      "reads": [
+        "Expenses!A4:I? (all rows)"
+      ],
+      "writes": [
+        "File system CSV output"
+      ],
+      "support": "partial",
+      "support_reason": "Uses VBA file I/O (Open, Print, Close) which requires custom handling.",
+      "analyzed": true
+    },
+    {
+      "id": "modExpenseTracker.ExportFolder",
+      "module": "modExpenseTracker",
+      "name": "ExportFolder",
+      "kind": "Function",
+      "scope": "Private",
+      "params": [],
+      "returns": "String",
+      "start_line": 292,
+      "end_line": 298,
+      "role": "utility",
+      "summary": "Returns the folder path to use for exported files, falling back to the default path if needed.",
+      "calls": [],
+      "reads": [
+        "ThisWorkbook.Path",
+        "Application.DefaultFilePath",
+        "Application.PathSeparator"
+      ],
+      "writes": [],
+      "support": "supported",
+      "support_reason": "Path handling uses standard properties that map to .NET equivalents.",
+      "analyzed": true
+    }
+  ],
+  "flags": [
+    {
+      "code": "PARTIAL_WORKSHEET_CHANGE_EVENT",
+      "severity": "Warning",
+      "support": "partial",
+      "source_ref": "ThisWorkbook:13",
+      "snippet": "Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)",
+      "reason": "Worksheet_Change event cascade in Workbook_SheetChange.",
+      "suggested_action": "Review the rule as an explicit service call."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "ThisWorkbook:24",
+      "snippet": "Application.EnableEvents = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in Workbook_SheetChange (2 places: lines 24, 41).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    },
+    {
+      "code": "IGNORABLE_DYNAMIC_RANGE",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "ThisWorkbook:28",
+      "snippet": "If Application.WorksheetFunction.CountA(ws.Range(\"C\" & r & \":H\" & r)) = 0 Then",
+      "reason": "Row or column address built from variables in Workbook_SheetChange (2 places: lines 28, 29).",
+      "suggested_action": "Becomes a loop or query over rows."
+    },
+    {
+      "code": "IGNORABLE_DYNAMIC_RANGE",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modExpenseTracker:56",
+      "snippet": "nextId = Application.WorksheetFunction.Max(wsL.Range(\"A\" & FIRST_ROW & \":A\" & LAST_ROW)) + 1",
+      "reason": "Row or column address built from variables in AddExpense.",
+      "suggested_action": "Becomes a loop or query over rows."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modExpenseTracker:59",
+      "snippet": "Application.EnableEvents = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in AddExpense (3 places: lines 59, 71, 77).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modExpenseTracker:117",
+      "snippet": "Application.ScreenUpdating = False",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in GenerateReport (8 places: lines 117, 118, 122, 126, 213, 222, 223, 224).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    },
+    {
+      "code": "IGNORABLE_DYNAMIC_RANGE",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modExpenseTracker:180",
+      "snippet": "Set rng = wsL.Range(\"F\" & FIRST_ROW & \":F\" & LAST_ROW)",
+      "reason": "Row or column address built from variables in GenerateReport.",
+      "suggested_action": "Becomes a loop or query over rows."
+    },
+    {
+      "code": "UNSUPPORTED_EXPORT_PDF",
+      "severity": "Warning",
+      "support": "unsupported",
+      "source_ref": "modExpenseTracker:235",
+      "snippet": "ThisWorkbook.Worksheets(\"Report\").ExportAsFixedFormat Type:=xlTypePDF, Filename:=p, _",
+      "reason": "Excel PDF export through COM in ExportReportPDF.",
+      "suggested_action": "Generate the PDF with a .NET PDF library."
+    },
+    {
+      "code": "PARTIAL_FILE_WRITE",
+      "severity": "Warning",
+      "support": "partial",
+      "source_ref": "modExpenseTracker:260",
+      "snippet": "Open p For Output As #f",
+      "reason": "File write in ExportExpensesCSV (2 places: lines 260, 281).",
+      "suggested_action": "Write under a configured folder on the server."
+    },
+    {
+      "code": "IGNORABLE_EXCEL_UI_ONLY",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "modExpenseTracker:295",
+      "snippet": "If Len(p) = 0 Or InStr(p, \"://\") > 0 Then p = Application.DefaultFilePath",
+      "reason": "Excel-only UI or environment setting (dropped in the migration) in ExportFolder (2 places: lines 295, 296).",
+      "suggested_action": "Remove it, or replace with the web equivalent."
+    }
+  ],
+  "usage": {
+    "tokens": 8807,
+    "calls": 2,
+    "chunks": 2
+  }
+}

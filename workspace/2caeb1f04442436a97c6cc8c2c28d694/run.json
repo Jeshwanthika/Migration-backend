@@ -1,0 +1,57 @@
+{
+  "run_id": "2caeb1f04442436a97c6cc8c2c28d694",
+  "skill_id": "xlsm-to-aspnetcore",
+  "filename": "Sample_Orders_Pricing.xlsm",
+  "status": "COMPLETED_WITH_WARNINGS",
+  "current_node": null,
+  "nodes": [
+    {
+      "name": "intake_check",
+      "status": "done",
+      "started_at": "2026-10-17T10:18:34+00:00",
+      "finished_at": "2026-10-17T10:18:34+00:00"
+    },
+    {
+      "name": "extractor",
+      "status": "done",
+      "started_at": "2026-10-17T10:18:34+00:00",
+      "finished_at": "2026-10-17T10:18:34+00:00"
+    },
+    {
+      "name": "analyzer",
+      "status": "done",
+      "started_at": "2026-10-17T10:18:34+00:00",
+      "finished_at": "2026-10-17T10:19:03+00:00"
+    },
+    {
+      "name": "spec_architect",
+      "status": "done",
+      "started_at": "2026-10-17T10:19:03+00:00",
+      "finished_at": "2026-10-17T10:21:19+00:00"
+    },
+    {
+      "name": "generator",
+      "status": "done",
+      "started_at": "2026-10-17T10:21:19+00:00",
+      "finished_at": "2026-10-17T10:22:53+00:00"
+    },
+    {
+      "name": "validator",
+      "status": "done",
+      "started_at": "2026-10-17T10:22:53+00:00",
+      "finished_at": "2026-10-17T10:22:59+00:00"
+    },
+    {
+      "name": "packager",
+      "status": "done",
+      "started_at": "2026-10-17T10:22:59+00:00",
+      "finished_at": "2026-10-17T10:23:00+00:00"
+    }
+  ],
+  "tokens_used": 41140,
+  "detail": null,
+  "flags_count": 9,
+  "error": null,
+  "started_at": "2026-10-17T10:18:33+00:00",
+  "finished_at": "2026-10-17T10:23:00+00:00"
+}

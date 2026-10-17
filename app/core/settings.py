@@ -55,6 +55,8 @@ class Settings:
     llm_provider: str = "gemini"
     gemini_model: str = ""
     gemini_api_key: str = field(default="", repr=False)
+    groq_model: str = ""
+    groq_api_key: str = field(default="", repr=False)
     llm_retries: int = 4
     llm_call_delay_seconds: float = 4.0
     llm_backoff_base_seconds: float = 2.0
@@ -84,6 +86,8 @@ class Settings:
             llm_provider=os.environ.get("LLM_PROVIDER", "gemini"),
             gemini_model=os.environ.get("GEMINI_MODEL", ""),
             gemini_api_key=os.environ.get("GEMINI_API_KEY", ""),
+            groq_model=os.environ.get("GROQ_MODEL", ""),
+            groq_api_key=os.environ.get("GROQ_API_KEY", ""),
             llm_retries=_int("LLM_RETRIES", 4),
             llm_call_delay_seconds=_float("LLM_CALL_DELAY_SECONDS", 4.0),
             llm_backoff_base_seconds=_float("LLM_BACKOFF_BASE_SECONDS", 2.0),

@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.0",
+  "app_name": "SampleOrdersPricing",
+  "files": [
+    {
+      "path": ".gitignore",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "README.md",
+      "kind": "docs",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing.sln",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Data/InventoryItem.json",
+      "kind": "data",
+      "spec_refs": [
+        "ENT-002"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Data/OrderLine.json",
+      "kind": "data",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Infrastructure/Coerce.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Infrastructure/IRepository.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Infrastructure/JsonRepository.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Infrastructure/ReportFile.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Infrastructure/ResultFormatter.cs",
+      "kind": "repository",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Models/IEntity.cs",
+      "kind": "model",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Models/InventoryItem.cs",
+      "kind": "model",
+      "spec_refs": [
+        "ENT-002"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Models/OrderLine.cs",
+      "kind": "model",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Entities/InventoryItem.cshtml",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-002"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Entities/InventoryItem.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-002"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Entities/OrderLine.cshtml",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Entities/OrderLine.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [
+        "ENT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Index.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Index.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Reports.cshtml",
+      "kind": "page",
+      "spec_refs": [
+        "RPT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Reports.cshtml.cs",
+      "kind": "page",
+      "spec_refs": [
+        "RPT-001"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/Shared/_Layout.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/_ViewImports.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Pages/_ViewStart.cshtml",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Program.cs",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/SampleOrdersPricing.csproj",
+      "kind": "scaffold",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Services/BusinessRules.Reports.cs",
+      "kind": "service",
+      "spec_refs": [
+        "RPT-001"
+      ],
+      "is_stub": true
+    },
+    {
+      "path": "SampleOrdersPricing/Services/BusinessRules.Rules.cs",
+      "kind": "service",
+      "spec_refs": [
+        "RUL-001",
+        "RUL-002",
+        "RUL-003",
+        "RUL-004",
+        "RUL-005",
+        "RUL-006",
+        "RUL-007",
+        "RUL-008",
+        "RUL-009",
+        "RUL-010",
+        "RUL-011",
+        "RUL-012",
+        "RUL-013",
+        "RUL-014",
+        "RUL-015",
+        "RUL-016",
+        "RUL-017",
+        "RUL-018",
+        "RUL-019",
+        "RUL-020",
+        "RUL-021",
+        "RUL-022"
+      ],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/Services/BusinessRules.cs",
+      "kind": "service",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/appsettings.json",
+      "kind": "config",
+      "spec_refs": [],
+      "is_stub": false
+    },
+    {
+      "path": "SampleOrdersPricing/wwwroot/css/site.css",
+      "kind": "page",
+      "spec_refs": [],
+      "is_stub": false
+    }
+  ],
+  "stubs": [
+    {
+      "spec_id": "RPT-001",
+      "method": "OrderSummaryReport",
+      "cause": "unsupported",
+      "reason": "Excel export needs a library such as ClosedXML. Add the package and implement this report."
+    }
+  ],
+  "uncovered_spec_items": [],
+  "flags": [
+    {
+      "code": "STUB_GENERATED",
+      "severity": "Info",
+      "support": null,
+      "source_ref": "RPT-001",
+      "snippet": null,
+      "reason": "OrderSummary was written as a stub: Excel export needs a library such as ClosedXML. Add the package and implement this report.",
+      "suggested_action": "Implement it by hand. The original VBA is quoted in the code."
+    }
+  ],
+  "usage": {
+    "tokens": 12985,
+    "calls": 3,
+    "batches": 3
+  }
+}
